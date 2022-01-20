@@ -116,116 +116,56 @@ i = 0;
     % While loop runs the code for a given amount of time
     zeroDegreePos = 0;
     piDegreePos = 2048;
-    tolerance = 1;
+    tolerance = 5;
     posData = [];
+    xData = [];
     j = 0;
-    while (j<200)
+    while (j<5)
         j = j+1;
         
-        % Move to 0 degree
-        write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_GOAL_POSITION, zeroDegreePos);
-        dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
-        dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
-
-        if dxl_comm_result ~= COMM_SUCCESS
-            fprintf('0 degree pos: %s\n', getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
-        elseif dxl_error ~= 0
-            fprintf('0 degree pos: %s\n', getRxPacketError(PROTOCOL_VERSION, dxl_error));
-        end
-        
-        % Wait until reached goal position
-        while(true)
-            % Read present position
-            dxl_present_position = read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_PRESENT_POSITION);
+        x = 0.0;
+        while x <= 2 * pi
+            % Map output to use full servo range
+            %goalPos = int32((sin(x) + 1) * 2048);
+            goalPos = 2048 * sin(x) + 2048;
+            
+            % Move to goalPos
+            write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_GOAL_POSITION, goalPos);
             dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
             dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
 
             if dxl_comm_result ~= COMM_SUCCESS
-                fprintf('read position: %s\n', getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
+                fprintf('0 degree pos: %s\n', getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
             elseif dxl_error ~= 0
-                fprintf('read position: %s\n', getRxPacketError(PROTOCOL_VERSION, dxl_error));
+                fprintf('0 degree pos: %s\n', getRxPacketError(PROTOCOL_VERSION, dxl_error));
             end
             
-            % Log and write to txt file
-            pos = typecast(uint32(dxl_present_position), 'int32');
-            fprintf('[ID:%03d] Position: %03d\n', DXL_ID, pos);
-            posData = [posData, pos];
-            
-            if abs(typecast(uint32(dxl_present_position), 'int32') - zeroDegreePos) <= tolerance
-                k = 0;
-                while(k<10)
-                    k = k + 1;
-                    dxl_present_position = read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_PRESENT_POSITION);
-                    dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
-                    dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
+            % Wait until reached goal position
+            while(true)
+                % Read present position
+                dxl_present_position = read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_PRESENT_POSITION);
+                dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
+                dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
 
-                    if dxl_comm_result ~= COMM_SUCCESS
-                        fprintf('read position: %s\n', getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
-                    elseif dxl_error ~= 0
-                        fprintf('read position: %s\n', getRxPacketError(PROTOCOL_VERSION, dxl_error));
-                    end
-
-                    % Log and write to txt file
-                    pos = typecast(uint32(dxl_present_position), 'int32');
-                    fprintf('[ID:%03d] Position: %03d\n', DXL_ID, pos);
-                    posData = [posData, pos];
+                if dxl_comm_result ~= COMM_SUCCESS
+                    fprintf('read position: %s\n', getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
+                elseif dxl_error ~= 0
+                    fprintf('read position: %s\n', getRxPacketError(PROTOCOL_VERSION, dxl_error));
                 end
-                break
-            end
-        end
-        
-        % Move to 180 degree
-        write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_GOAL_POSITION, piDegreePos);
-        dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
-        dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
 
-        if dxl_comm_result ~= COMM_SUCCESS
-            fprintf('0 degree pos: %s\n', getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
-        elseif dxl_error ~= 0
-            fprintf('0 degree pos: %s\n', getRxPacketError(PROTOCOL_VERSION, dxl_error));
-        end
-        
-        % Wait until reached goal position
-        while(true)
-            % Read present position
-            dxl_present_position = read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_PRESENT_POSITION);
-            dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
-            dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
+                % Log and write to txt file
+                pos = typecast(uint32(dxl_present_position), 'int32');
+                fprintf('[ID:%03d] Position: %03d\n', DXL_ID, pos);
+                posData = [posData, pos];
+                xData = [xData, x];
 
-            if dxl_comm_result ~= COMM_SUCCESS
-                fprintf('read position: %s\n', getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
-            elseif dxl_error ~= 0
-                fprintf('read position: %s\n', getRxPacketError(PROTOCOL_VERSION, dxl_error));
-            end
-
-            % Log and write to txt file
-            pos = typecast(uint32(dxl_present_position), 'int32');
-            fprintf('[ID:%03d] Position: %03d\n', DXL_ID, pos);
-            posData = [posData, pos];
-            
-            if abs(typecast(uint32(dxl_present_position), 'int32') - piDegreePos) <= tolerance
-                k = 0;
-                while(k<10)
-                    k = k + 1;
-                    dxl_present_position = read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_PRESENT_POSITION);
-                    dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
-                    dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
-
-                    if dxl_comm_result ~= COMM_SUCCESS
-                        fprintf('read position: %s\n', getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
-                    elseif dxl_error ~= 0
-                        fprintf('read position: %s\n', getRxPacketError(PROTOCOL_VERSION, dxl_error));
-                    end
-
-                    % Log and write to txt file
-                    pos = typecast(uint32(dxl_present_position), 'int32');
-                    fprintf('[ID:%03d] Position: %03d\n', DXL_ID, pos);
-                    posData = [posData, pos];
+                if abs(typecast(uint32(dxl_present_position), 'int32') - goalPos) <= tolerance
+                    break
                 end
-                break
             end
+            x = x + 0.005;
         end
-        
+        x = 0.0;
     end
 
 % Disable Dynamixel Torque
