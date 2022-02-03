@@ -177,3 +177,12 @@ function writePosition(dxl_id, position)
         fprintf('Write position error: %03d, %s\n', dxl_id, getRxPacketError(PROTOCOL_VERSION, dxl_error));
     end
 end
+
+function sinWave = computeSinWave()
+    step_size = 0.005;
+    range = 500;
+    translation = 2046;
+
+    x = (0.0:step_size:2*pi);
+    sinWave = range * sin(x) + translation;
+end
