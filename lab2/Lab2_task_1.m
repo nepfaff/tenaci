@@ -152,12 +152,28 @@ function pos = getPosition(dxl_id)
     dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
     dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
     if dxl_comm_result ~= COMM_SUCCESS
-        fprintf('%s\n', getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
+        fprintf('Get position error: %03d, %s\n', dxl_id, getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
         pos = -1;
     elseif dxl_error ~= 0
-        fprintf('%s\n', getRxPacketError(PROTOCOL_VERSION, dxl_error));
+        fprintf('Get position error: %03d, %s\n', dxl_id, getRxPacketError(PROTOCOL_VERSION, dxl_error));
         pos = -1;
     else
        pos = typecast(uint32(dxl_present_position), 'int32'); 
+    end
+end
+
+% Send the position command to the encoder specified by dxl_id.
+% position refers to the encoder value.
+% Prints any errors that occur.
+function writePosition(dxl_id, position)
+    write4ByteTxRx(port_num, PROTOCOL_VERSION, dxl_id, ADDR_PRO_GOAL_POSITION, position);
+    
+    % Check for errors
+    dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
+    dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
+    if dxl_comm_result ~= COMM_SUCCESS
+        fprintf('Write position error: %03d, %s\n', dxl_id, getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
+    elseif dxl_error ~= 0
+        fprintf('Write position error: %03d, %s\n', dxl_id, getRxPacketError(PROTOCOL_VERSION, dxl_error));
     end
 end

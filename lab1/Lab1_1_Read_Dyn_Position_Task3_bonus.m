@@ -158,7 +158,8 @@ i = 0;
                 fprintf('[ID:%03d] Position: %03d\n', DXL_ID, pos);
                 posData = [posData, pos];
                 xData = [xData, x];
-
+                
+                % Check if reached goal position
                 if abs(typecast(uint32(dxl_present_position), 'int32') - goalPos) <= tolerance
                     break
                 end
