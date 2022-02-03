@@ -37,14 +37,14 @@ ADDR_PRO_OPERATING_MODE      = 11;
 PROTOCOL_VERSION            = 2.0;          % See which protocol version is used in the Dynamixel
 
 % Default setting
-DXL_BASE_ID                     = 11;            % Dynamixel ID: 1
-DXL_ELBOW_ID                    = 14;
+DXL_ID1                      = 11;            % Dynamixel ID: 1
+DXL_ID2                      = 14; 
 BAUDRATE                    = 1000000;
 DEVICENAME                  = 'COM4';       % Check which port is being used on your controller
-                                              % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
-% Link lengths in m
-LINK_LENGTH_1 = 0.08;
-LINK_LENGTH_2 = 0.06;
+                                            % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
+% Link lengths in cm
+LINK_LENGTH_1 = 8;
+LINK_LENGTH_2 = 6;
                                             
 TORQUE_ENABLE               = 1;            % Value for enabling the torque
 TORQUE_DISABLE              = 0;            % Value for disabling the torque
@@ -103,24 +103,23 @@ MAX_POS = 3400;
 MIN_POS = 600;
 
 % Set max position limit
-write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_BASE_ID, ADDR_MAX_POS, MAX_POS);
-write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ELBOW_ID, ADDR_MAX_POS, MAX_POS);
+write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_MAX_POS, MAX_POS);
+write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_MAX_POS, MAX_POS);
 
 % Set min position limit
-write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_BASE_ID, ADDR_MIN_POS, MIN_POS);
-write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ELBOW_ID, ADDR_MIN_POS, MIN_POS);
+write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_MIN_POS, MIN_POS);
+write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_MIN_POS, MIN_POS);
 % ----------------------------------%
 
 % Put actuator into Position Control Mode
-write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_BASE_ID, ADDR_PRO_OPERATING_MODE, 3);
-write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ELBOW_ID, ADDR_PRO_OPERATING_MODE, 3);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_OPERATING_MODE, 3);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_OPERATING_MODE, 3);
 
-
-% Disable Dynamixel Torque
-%write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_BASE_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
-write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_BASE_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);
-%write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ELBOW_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
-write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ELBOW_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);
+% Enable Dynamixel Torque
+% write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);
+% write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);
 
 dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
 dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
@@ -133,36 +132,51 @@ else
     fprintf('Dynamixel has been successfully connected \n');
 end
 
-i = 0;
-while (i<200)
-    i = i+1;
-    
-    dxl_present_position = read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_BASE_ID, ADDR_PRO_PRESENT_POSITION);
-    
-    % Check for errors
-    dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
-    dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
-    if dxl_comm_result ~= COMM_SUCCESS
-        fprintf('Get position error: %03d, %s\n', DXL_BASE_ID, getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
-        pos = -1;
-    elseif dxl_error ~= 0
-        fprintf('Get position error: %03d, %s\n', DXL_BASE_ID, getRxPacketError(PROTOCOL_VERSION, dxl_error));
-        pos = -1;
-    else
-       pos = typecast(uint32(dxl_present_position), 'int32'); 
-    end
-    
-    % Read and print encoder position
-    %fprintf('[ID:%03d] Position: %03d\n', DXL_BASE_ID, getPosition(DXL_BASE_ID, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS));
-    %fprintf('[ID:%03d] Position: %03d\n', DXL_ELBOW_ID, getPosition(DXL_ELBOW_ID, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS));
+ENCODE_IN_RAD = 4096 / (2*pi);
+ENCODE_IN_DEG = 4096 / 360;
 
-    if ~(abs(dxl_goal_position(index) - typecast(uint32(dxl_present_position), 'int32')) > DXL_MOVING_STATUS_THRESHOLD)
-        break;
-    end
+tool_x_lst = [];
+tool_y_lst = [];
+
+figure;
+hold on;
+title("Tenaci");
+
+j = 0;
+while (j<500)
+    j = j+1;
+    
+    pos1 = getPosition(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos2 = getPosition(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    fprintf('[ID:%03d] Position: %03d\n', DXL_ID1, pos1);
+    fprintf('[ID:%03d] Position: %03d\n', DXL_ID2, pos2);
+    
+    theta1 = double(pos1) / ENCODE_IN_RAD + pi;
+    theta2 = double(pos2) / ENCODE_IN_RAD + pi;
+    fprintf('[ID:%03d] Position (degrees): %03d\n', DXL_ID1, pos1 / ENCODE_IN_DEG);
+    fprintf('[ID:%03d] Position (degrees): %03d\n', DXL_ID2, pos2 / ENCODE_IN_DEG);
+    
+    T_0 = [1 0 0 ; 0 1 0; 0 0 1];
+    T_1 = [cos(theta1) -sin(theta1) 0 ; sin(theta1) cos(theta1) 0; 0 0 1];
+    T_2 = [1 0 0 ; 0 1 LINK_LENGTH_1; 0 0 1];
+    T_3 = [cos(theta2) -sin(theta2) 0 ; sin(theta2) cos(theta2) 0; 0 0 1];
+    T_4 = [1 0 0 ; 0 1 LINK_LENGTH_2; 0 0 1];
+    
+    tool_pose = T_0 * T_1 * T_2 * T_3 * T_4
+    tool_x = tool_pose(1,3);
+    tool_y = tool_pose(2,3);
+    tool_x_lst = [tool_x_lst, tool_x];
+    tool_y_lst = [tool_y_lst, tool_y];
+    plot(tool_x_lst, tool_y_lst, "-r");
+    drawnow
+    
+%     writePosition(DXL_ID1, 600, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION)
+%     writePosition(DXL_ID2, 2000, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION)
+    
 end
 
 % Disable Dynamixel Torque
-write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_BASE_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);
 dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
 dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
 if dxl_comm_result ~= COMM_SUCCESS
@@ -170,7 +184,7 @@ if dxl_comm_result ~= COMM_SUCCESS
 elseif dxl_error ~= 0
     fprintf('%s\n', getRxPacketError(PROTOCOL_VERSION, dxl_error));
 end
-write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ELBOW_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);
 dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION);
 dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION);
 if dxl_comm_result ~= COMM_SUCCESS
@@ -186,8 +200,9 @@ fprintf('Port Closed \n');
 % Unload Library
 unloadlibrary(lib_name);
 
-close all;
-clear all;
+% close all;
+% clear all;
+plot(tool_x_lst, tool_y_lst);
 
 % Returns encoder position as an int32.
 % If an error occurs, -1 is returned and the error is printed.
@@ -211,7 +226,7 @@ end
 % Send the position command to the encoder specified by dxl_id.
 % position refers to the encoder value.
 % Prints any errors that occur.
-function writePosition(dxl_id, position, port_num, PROTOCOL_VERSION, COMM_SUCCESS)
+function writePosition(dxl_id, position, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION)
     write4ByteTxRx(port_num, PROTOCOL_VERSION, dxl_id, ADDR_PRO_GOAL_POSITION, position);
     
     % Check for errors
@@ -232,3 +247,4 @@ function sinWave = computeSinWave()
     x = (0.0:step_size:2*pi);
     sinWave = range * sin(x) + translation;
 end
+

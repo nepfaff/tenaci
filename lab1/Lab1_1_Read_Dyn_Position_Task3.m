@@ -38,8 +38,8 @@ PROTOCOL_VERSION            = 2.0;          % See which protocol version is used
 
 % Default setting
 DXL_ID                      = 11;            % Dynamixel ID: 1
-BAUDRATE                    = 115200;
-DEVICENAME                  = 'COM3';       % Check which port is being used on your controller
+BAUDRATE                    = 1000000;
+DEVICENAME                  = 'COM4';       % Check which port is being used on your controller
                                             % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
                                             
 TORQUE_ENABLE               = 1;            % Value for enabling the torque
