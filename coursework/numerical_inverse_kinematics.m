@@ -44,7 +44,7 @@ z = T06(3,4);
 % See here for joint limits: https://github.com/ROBOTIS-GIT/open_manipulator/blob/be2859a0506b4e941a19435c0a07562b41768a27/open_manipulator_libs/src/OpenManipulator.cpp#L34-L82
 range = [-2,2; -2,2; -2,2; -2,2];
 
-eqns = [x == 0.0, y == 0.1, z == 0.3];
+eqns = [x == 0.0, y == 0.1, z == 0.03];
 vars = [t1 t2 t3 t4];
 [st1, st2, st3, st4] = vpasolve(eqns, vars, range)
 
