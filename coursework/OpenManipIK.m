@@ -1,9 +1,11 @@
+function sols = OpenManipIK(Xtool, Ytool, Ztool, ThetaTool)
+%OPENMANIPFK IK for OpenManipulator-X robot.
 % Returns a list of IK solution structs that have the following attributes:
 % - joint1_angle
 % - joint2_angle
 % - joint3_angle
 % - joint4_angle
-function sols = OpenManipIK(Xtool, Ytool, Ztool, ThetaTool)
+
     % System constants
     d1 = 0.077;
     l1 = 0.130;
