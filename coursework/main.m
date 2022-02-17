@@ -22,10 +22,14 @@ end
 
 %% ---- Control Table Addresses ---- %%
 
-ADDR_PRO_TORQUE_ENABLE       = 64;           % Control table address is different in Dynamixel model
-ADDR_PRO_GOAL_POSITION       = 116; 
-ADDR_PRO_PRESENT_POSITION    = 132; 
-ADDR_PRO_OPERATING_MODE      = 11;
+ADDR_PRO_TORQUE_ENABLE        = 64;           % Control table address is different in Dynamixel model
+ADDR_PRO_GOAL_POSITION        = 116; 
+ADDR_PRO_PRESENT_POSITION     = 132; 
+ADDR_PRO_OPERATING_MODE       = 11;
+ADDR_PRO_DRIVE_MODE           = 10;
+ADDR_PRO_PROFILE_ACCELERATION = 108;
+ADDR_PRO_PROFILE_VELOCITY     = 112;
+ADDR_PRO_MOVING               = 122;
 
 %% ---- Other Settings ---- %%
 
@@ -47,6 +51,9 @@ LINK_LENGTH_2 = 6;
                                             
 TORQUE_ENABLE               = 1;            % Value for enabling the torque
 TORQUE_DISABLE              = 0;            % Value for disabling the torque
+POSITION_MODE               = 3;            % Position control mode
+TIME_BASED_MODE             = 8;            % Time based drive mode
+TIME_BASED_REVERSED_MODE    = 9;            % Time based + reversed drive mode
 DXL_MINIMUM_POSITION_VALUE  = -150000;      % Dynamixel will rotate between this value
 DXL_MAXIMUM_POSITION_VALUE  = 150000;       % and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
 DXL_MOVING_STATUS_THRESHOLD = 20;           % Dynamixel moving status threshold
@@ -111,11 +118,18 @@ write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_MIN_POS, MIN_POS);
 % ----------------------------------%
 
 % Put actuator into Position Control Mode
-write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_OPERATING_MODE, 3);
-write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_OPERATING_MODE, 3);
-write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID3, ADDR_PRO_OPERATING_MODE, 3);
-write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_PRO_OPERATING_MODE, 3);
-write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID5, ADDR_PRO_OPERATING_MODE, 3);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_OPERATING_MODE, POSITION_MODE);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_OPERATING_MODE, POSITION_MODE);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID3, ADDR_PRO_OPERATING_MODE, POSITION_MODE);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_PRO_OPERATING_MODE, POSITION_MODE);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID5, ADDR_PRO_OPERATING_MODE, POSITION_MODE);
+
+% Put actuator into Time-Based Drive Mode
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID3, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
+% Gripper is not in time-based mode!
 
 % Disable Dynamixel Torque (Should either enable or disable torque)
 disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
@@ -177,7 +191,9 @@ while (j<500)
     plot3(tool_x_lst, tool_y_lst, tool_z_lst, "-r");
     drawnow;
     
-%     writePosition(DXL_ID1, 600, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION)
+%     writePosition(DXL_ID1, 600, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+%     writeVelocity(DXL_ID1, 600, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+%     writeAcceleration(DXL_ID1, 600, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
     
 end
 
