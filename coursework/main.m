@@ -139,11 +139,11 @@ disableDynamixelTorque(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENAB
 disableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
 
 % Enable Dynamixel Torque (Should either enable or disable torque)
-disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
-disableDynamixelTorque(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
-disableDynamixelTorque(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
-disableDynamixelTorque(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
-disableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
+% disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
+% disableDynamixelTorque(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
+% disableDynamixelTorque(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
+% disableDynamixelTorque(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
+% disableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
 
 % Set up live position plot
 tool_x_lst = [];
@@ -152,6 +152,21 @@ tool_z_lst = [];
 figure;
 hold on;
 title("Tool position");
+
+% Define start pose
+startPose.x = 0.0;
+startPose.y = 0.274;
+startPose.z = 0.2048;
+startPose.theta = 0.0;
+
+% Define waypoints (must include startPose!)
+waypoint1.x = 0.0;
+waypoint1.y = 0.148;
+waypoint1.z = 0.079;
+waypoint1.theta = -pi/2;
+
+currentWaypoint = 0; % 0 means move to start position without trajectories
+waypoints = [startPose, waypoint1];
 
 j = 0;
 while (j<500)
@@ -190,6 +205,62 @@ while (j<500)
     tool_z_lst = [tool_z_lst, tool_z];
     plot3(tool_x_lst, tool_y_lst, tool_z_lst, "-r");
     drawnow;
+    
+    
+    if currentWaypoint == 0 % Move to start position and pause
+        % Get joint angles required to reach start position
+        startIKSols = OpenManipIK(startPose.x, startPose.y, startPose.z, startPose.theta);
+        startIKSol = getFirstValidIKSol(startIKSols);
+        
+        % Convert joint angles into encoder values
+        pos1 = radiansToEncode(startIKSol.joint1_angle);
+        pos2 = radiansToEncode(startIKSol.joint2_angle);
+        pos3 = radiansToEncode(startIKSol.joint3_angle);
+        pos4 = radiansToEncode(startIKSol.joint4_angle);
+        
+        % Move to start position without specific trajectory
+        writePosition(DXL_ID1, pos1, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+        writePosition(DXL_ID2, pos2, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+        writePosition(DXL_ID3, pos3, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+        writePosition(DXL_ID4, pos4, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+        
+        % Pause
+        pause(5);
+        
+        % Skip start pose in waypoint list
+        currentWaypoint = currentWaypoint + 1;
+    elseif currentWaypoint <= length(waypoints) % Move along planned trajectories between waypoints
+        % Get start and end pose
+        startPose = waypoints(currentWaypoint-1);
+        endPose = waypoints(currentWaypoint);
+        
+        % Plan joint trajectories
+        timeForTrajectory = 5; % In seconds
+        samplePeriod = 0.1; % In seconds
+        [thetas1, thetas2, thetas3, thetas4, times] = JointAngleSetPointsStartEndUsingJointSpace(startPose.x, startPose.y, startPose.z, startPose.theta, endPose.x, endPose.y, endPose.z, endPose.theta, timeForTrajectory, samplePeriod);
+        
+        % Send trajectories to servos
+        for i = 1, length(times)
+            pos1 = radiansToEncode(thetas1(i));
+            pos2 = radiansToEncode(thetas2(i));
+            pos3 = radiansToEncode(thetas3(i));
+            pos4 = radiansToEncode(thetas4(i));
+            
+            writePosition(DXL_ID1, pos1, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+            writePosition(DXL_ID2, pos2, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+            writePosition(DXL_ID3, pos3, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+            writePosition(DXL_ID4, pos4, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+            
+            % TODO: Play with velocity and acceleration
+            
+            pause(samplePeriod); % TOOD: Check if this makes sense
+        end
+    else % Reached final waypoint
+        print("FINAL WAYPOINT REACHED!");
+        break;
+    end
+    
+    currentWaypoint = currentWaypoint + 1;
     
 %     writePosition(DXL_ID1, 600, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
 %     writeVelocity(DXL_ID1, 600, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
