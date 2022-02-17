@@ -3,7 +3,7 @@ function rad = encoderToRadians(pos)
 %[-pi, pi].
 
     ENCODE_IN_RAD = 4096 / (2*pi);
-    rad = double(pos) / -ENCODE_IN_RAD + pi;
+    rad = double(pos) / ENCODE_IN_RAD + pi;
     
     % Ensure that in range [-pi, pi]
     if rad > pi
