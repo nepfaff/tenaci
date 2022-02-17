@@ -59,6 +59,11 @@ DXL_MINIMUM_POSITION_VALUE  = -150000;      % Dynamixel will rotate between this
 DXL_MAXIMUM_POSITION_VALUE  = 150000;       % and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
 DXL_MOVING_STATUS_THRESHOLD = 20;           % Dynamixel moving status threshold
 
+% Values to send to the gripper
+GRIPPER_OPEN_POS = 1800;
+GRIPPER_CLOSED_POS = 2647;
+GRIPPER_CUBE_HOLD_POS = 2370;
+
 ESC_CHARACTER               = 'e';          % Key for escaping loop
 
 COMM_SUCCESS                = 0;            % Communication Success result value
@@ -130,7 +135,7 @@ write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_DRIVE_MODE, TIME_BA
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID3, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
-% Gripper is not in time-based mode!
+write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID5, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
 
 % Disable Dynamixel Torque (Should either enable or disable torque)
 % disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
@@ -140,11 +145,11 @@ write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_PRO_DRIVE_MODE, TIME_BA
 % disableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
 
 % Enable Dynamixel Torque (Should either enable or disable torque)
-disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
-disableDynamixelTorque(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
-disableDynamixelTorque(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
-disableDynamixelTorque(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
-disableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
+enableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
+enableDynamixelTorque(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
+enableDynamixelTorque(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
+enableDynamixelTorque(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
+enableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
 
 % Set up live position plot
 tool_x_lst = [];
@@ -156,44 +161,47 @@ startPose.x = 0.0;
 startPose.y = 0.274;
 startPose.z = 0.2048;
 startPose.theta = 0.0;
+startPose.gripper = GRIPPER_OPEN_POS;
 
 % Define waypoints (must include startPose!)
 waypoint1.x = 0.0;
 waypoint1.y = 0.148;
 waypoint1.z = 0.079;
 waypoint1.theta = -pi/2;
+waypoint1.gripper = GRIPPER_OPEN_POS;
 waypoint2.x = -0.148;
 waypoint2.y = 0.0;
 waypoint2.z = 0.079;
 waypoint2.theta = -pi/2;
+waypoint2.gripper = GRIPPER_CLOSED_POS;
 
 currentWaypoint = 0; % 0 means move to start position without trajectories
 waypoints = [startPose, waypoint1, waypoint2];
 
 while (true)
-%     % Read all encoder positions
-%     pos1 = getPosition(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-%     pos2 = getPosition(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-%     pos3 = getPosition(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-%     pos4 = getPosition(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-%     pos5 = getPosition(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID1, pos1);
-%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID2, pos2);
-%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID3, pos3);
-%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID4, pos4);
-%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID5, pos5);
+    % Read all encoder positions
+    pos1 = getPosition(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos2 = getPosition(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos3 = getPosition(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos4 = getPosition(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos5 = getPosition(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    fprintf('[ID:%03d] Position: %03d\n', DXL_ID1, pos1);
+    fprintf('[ID:%03d] Position: %03d\n', DXL_ID2, pos2);
+    fprintf('[ID:%03d] Position: %03d\n', DXL_ID3, pos3);
+    fprintf('[ID:%03d] Position: %03d\n', DXL_ID4, pos4);
+    fprintf('[ID:%03d] Position: %03d\n', DXL_ID5, pos5);
 %     
 %     % Convert all encoder positions into radians
-%     joint1_angle = encoderToRadians(pos1);
-%     joint2_angle = encoderToRadians(pos2);
-%     joint3_angle = encoderToRadians(pos3);
-%     joint4_angle = encoderToRadians(pos4);
-%     gripper_angle = encoderToRadians(pos5);
-%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID1, joint1_angle);
-%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID2, joint2_angle);
-%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID3, joint3_angle);
-%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID4, joint4_angle);
-%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID5, gripper_angle);
+    joint1_angle = encoderToRadians(pos1);
+    joint2_angle = encoderToRadians(pos2);
+    joint3_angle = encoderToRadians(pos3);
+    joint4_angle = encoderToRadians(pos4);
+    gripper_angle = encoderToRadians(pos5);
+    fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID1, joint1_angle);
+    fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID2, joint2_angle);
+    fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID3, joint3_angle);
+    fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID4, joint4_angle);
+    fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID5, gripper_angle);
 %     
 %     % Get tool position
 %     [tool_x, tool_y, tool_z] = OpenManipFK(joint1_angle, joint2_angle, joint3_angle, joint4_angle);
@@ -284,6 +292,10 @@ while (true)
         
         % Ensure that have time to reach waypoint
         pause(0.5);
+        
+        % Gripper configuration
+        writePosition(DXL_ID5, endPose.gripper, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+        
     else % Reached final waypoint
         fprintf("FINAL WAYPOINT REACHED!\n");
         break;
