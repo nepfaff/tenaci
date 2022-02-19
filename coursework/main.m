@@ -291,13 +291,17 @@ while (true)
         end
         
         % Ensure that have time to reach waypoint
-        pause(0.5);
+        pause(1);
         
         % Gripper configuration
         writePosition(DXL_ID5, endPose.gripper, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
         
     else % Reached final waypoint
         fprintf("FINAL WAYPOINT REACHED!\n");
+        
+        % TODO: Move robot in save finish position and disable torque at
+        % end of file
+        
         break;
     end
     
