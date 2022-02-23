@@ -44,7 +44,7 @@ DXL_ID3                      = 13;
 DXL_ID4                      = 14;
 DXL_ID5                      = 15;
 BAUDRATE                    = 1000000;
-DEVICENAME                  = 'COM4';       % Check which port is being used on your controller
+DEVICENAME                  = 'COM3';       % Check which port is being used on your controller
                                             % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
 % Link lengths in cm
 LINK_LENGTH_1 = 8;
@@ -63,6 +63,10 @@ DXL_MOVING_STATUS_THRESHOLD = 20;           % Dynamixel moving status threshold
 GRIPPER_OPEN_POS = 1800;
 GRIPPER_CLOSED_POS = 2647;
 GRIPPER_CUBE_HOLD_POS = 2370;
+
+% Cube specific values
+GRIPPER_Z_CUBE = 0.05; % 0.03
+GRIPPER_Z_ABOVE_CUBE = 0.08; % 0.06
 
 ESC_CHARACTER               = 'e';          % Key for escaping loop
 
@@ -164,19 +168,66 @@ startPose.theta = 0.0;
 startPose.gripper = GRIPPER_OPEN_POS;
 
 % Define waypoints (must include startPose!)
-waypoint1.x = 0.0;
-waypoint1.y = 0.148;
-waypoint1.z = 0.079;
-waypoint1.theta = -pi/2;
-waypoint1.gripper = GRIPPER_OPEN_POS;
-waypoint2.x = -0.148;
-waypoint2.y = 0.0;
-waypoint2.z = 0.079;
-waypoint2.theta = -pi/2;
-waypoint2.gripper = GRIPPER_CLOSED_POS;
+% waypoint1.x = 0.0;
+% waypoint1.y = 0.21;
+% waypoint1.z = 0.06;
+% waypoint1.theta = -pi/2;
+% waypoint1.gripper = GRIPPER_OPEN_POS;
+% waypoint2.x = 0.21;
+% waypoint2.y = 0.0;
+% waypoint2.z = 0.06;
+% waypoint2.theta = -pi/2;
+% waypoint2.gripper = GRIPPER_CLOSED_POS;
+% waypoints = [waypoint1, waypoint2];
+
+% start.x = 0.0;
+% start.y = 0.1;
+% finish.x = 0.1;
+% finish.y = 0.0;
+% waypoints = waypointsForTask2a(...
+%     start, finish,...
+%     GRIPPER_Z_CUBE, GRIPPER_Z_ABOVE_CUBE,...
+%     GRIPPER_Z_CUBE, GRIPPER_Z_ABOVE_CUBE,...
+%     GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
+% );
+
+% location1.x = 0.0;
+% location1.y = 0.21;
+% location1.direction = "down";
+% location2.x = 0.21;
+% location2.y = 0.0;
+% location2.direction = "back";
+% locations = [location1, location2];
+% waypoints = waypointsForTask2b(...
+%     locations,...
+%     GRIPPER_Z_CUBE, GRIPPER_Z_ABOVE_CUBE,...
+%     GRIPPER_Z_CUBE, GRIPPER_Z_ABOVE_CUBE,...
+%     GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
+% );
+
+start1.x = 0.0;
+start1.y = 0.21;
+start1.direction = "front";
+start2.x = 0.0;
+start2.y = 0.21;
+start2.direction = "back";
+start3.x = 0.0;
+start3.y = 0.21;
+start3.direction = "down";
+startLocations = [start1, start2, start3];
+finish.x = 0.21;
+finish.y = 0.0;
+endLocations = [finish];
+waypoints = waypointsForTask2c(...
+    startLocations, endLocations,...
+    GRIPPER_Z_CUBE, GRIPPER_Z_ABOVE_CUBE,...
+    GRIPPER_Z_CUBE, GRIPPER_Z_ABOVE_CUBE,...
+    GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
+);
+
 
 currentWaypoint = 0; % 0 means move to start position without trajectories
-waypoints = [startPose, waypoint1, waypoint2];
+waypoints = [startPose, waypoints];
 
 while (true)
     % Read all encoder positions
@@ -309,11 +360,11 @@ while (true)
 end
 
 % Disable Dynamixel Torque
-% disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
-% disableDynamixelTorque(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
-% disableDynamixelTorque(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
-% disableDynamixelTorque(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
-% disableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
+disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
+disableDynamixelTorque(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
+disableDynamixelTorque(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
+disableDynamixelTorque(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
+disableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
 
 % Close port
 closePort(port_num);
