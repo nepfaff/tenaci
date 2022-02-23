@@ -87,6 +87,6 @@ function waypoints = waypointsForTask2c(...
         
         % Stack height has increased by cube height
         nextGripperZPlaceDownCube = nextGripperZPlaceDownCube + gripperZPlaceDownCube;
-        nextGripperZAbovePlacedCube = nextGripperZPlaceDownCube + gripperZPlaceDownCube;
+        nextGripperZAbovePlacedCube = nextGripperZAbovePlacedCube + gripperZPlaceDownCube;
     end
 end

@@ -22,7 +22,7 @@ function waypoints = waypointsForTask2b(...
 %tightly encloses a cube.
     
     waypoints = [];
-    for i = 1 : length(startLocations)
+    for i = 1 : length(cubeLocations)
         loc = cubeLocations(i);
         
         if loc.direction == "front"
