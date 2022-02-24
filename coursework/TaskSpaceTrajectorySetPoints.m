@@ -21,8 +21,9 @@ function [jointAngles, times] = TaskSpaceTrajectorySetPoints(startWaypoint, endW
         
         % Covert into joint space
         ik_sols = OpenManipIK(tool_pose(1), tool_pose(2), tool_pose(3), tool_pose(4));
-        if length(ik_sols) == 0
-            fprintf("TaskSpaceTrajectorySetPoints: No solutions found");
+        if isempty(ik_sols)
+            fprintf("TaskSpaceTrajectorySetPoints: No IK solutions found. time = %d", t);
+            continue
         end
         ik_sol = getFirstValidIKSol(ik_sols);
         
