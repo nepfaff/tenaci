@@ -19,6 +19,11 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
 %gripperOpenPos is the encoder value that results in an open gripper.
 %gripperCubeHoldPos is the encoder value that results in a gripper that
 %tightly encloses a cube.
+%Returns a list of waypoint structs with attributes x, y, z, theta,
+%gripper, and groupToPrevious. gripper specifies the gripper opening.
+%groupToPrevious is a boolean that is true when the waypoint can be grouped
+%in a trajectory with the previous waypoint and false otherwise. This
+%allows multiple waypoints to be part of a fast spline trajectory.
 
     waypoints = [];
     
@@ -28,6 +33,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.z = gripperZAbovePickUpCube;
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperOpenPos;
+    waypoint.groupToPrevious = false;
     waypoints = [waypoints, waypoint];
     
     % Grab cube
@@ -36,6 +42,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.z = gripperZPickUpCube;
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
+    waypoint.groupToPrevious = false;
     waypoints = [waypoints, waypoint];
     
     % Pick up cube
@@ -44,6 +51,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.z = gripperZAbovePickUpCube;
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
+    waypoint.groupToPrevious = false;
     waypoints = [waypoints, waypoint];
     
     % Rotate gripper and move to place down (end) location
@@ -52,6 +60,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.z = gripperZAbovePlacedCube;
     waypoint.theta = 0.0;
     waypoint.gripper = gripperCubeHoldPos;
+    waypoint.groupToPrevious = false;
     waypoints = [waypoints, waypoint];
     
     % Place down cube
@@ -60,6 +69,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.z = gripperZPlaceDownCube;
     waypoint.theta = 0.0;
     waypoint.gripper = gripperOpenPos;
+    waypoint.groupToPrevious = false;
     waypoints = [waypoints, waypoint];
     
     % Move gripper up
@@ -68,5 +78,6 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.z = gripperZAbovePlacedCube;
     waypoint.theta = 0.0;
     waypoint.gripper = gripperOpenPos;
+    waypoint.groupToPrevious = false;
     waypoints = [waypoints, waypoint];
 end

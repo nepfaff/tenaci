@@ -167,6 +167,7 @@ startPose.y = 0.274;
 startPose.z = 0.2048;
 startPose.theta = 0.0;
 startPose.gripper = GRIPPER_OPEN_POS;
+startPose.groupToPrevious = false;
 
 % Define waypoints (must include startPose!)
 % waypoint1.x = 0.0;
@@ -174,11 +175,13 @@ startPose.gripper = GRIPPER_OPEN_POS;
 % waypoint1.z = 0.06;
 % waypoint1.theta = -pi/2;
 % waypoint1.gripper = GRIPPER_OPEN_POS;
+% waypoint1.groupToPrevious = false;
 % waypoint2.x = 0.21;
 % waypoint2.y = 0.0;
 % waypoint2.z = 0.06;
 % waypoint2.theta = -pi/2;
 % waypoint2.gripper = GRIPPER_CLOSED_POS;
+% waypoint2.groupToPrevious = false;
 % waypoints = [waypoint1, waypoint2];
 
 % start.x = 0.0;
