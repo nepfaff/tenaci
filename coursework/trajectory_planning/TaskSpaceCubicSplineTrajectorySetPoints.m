@@ -4,6 +4,10 @@ function [jointAngles, times] = TaskSpaceCubicSplineTrajectorySetPoints(...
 %TASKSPACECUBICSPINETRAJECTORYSETPOINTS Returns samples of a cubic task
 %space spine interpolation in joint space representation.
 
+    if length(waypoints) < 2
+        error("Need a minimum of 2 waypoints for spline interpolation");
+    end
+
     timeBetweenWaypoints = timeForTrajectory / (length(waypoints)-1);
     
     % Construct (value, time) points
@@ -56,10 +60,16 @@ function [jointAngles, times] = TaskSpaceCubicSplineTrajectorySetPoints(...
         % Covert into joint space
         ik_sols = OpenManipIK(x, y, z, theta);
         if isempty(ik_sols)
-            fprintf("TaskSpaceCubicSplineTrajectorySetPoints: No IK solutions found. time = %d", t);
-            continue
+            printWaypoints(waypoints);
+            fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n", x, y, z, theta);
+            error("TaskSpaceCubicSplineTrajectorySetPoints: No IK solutions found. Time = %d", t);
         end
-        ik_sol = getFirstValidIKSol(ik_sols);
+        [ik_sol, err] = getFirstValidIKSol(ik_sols);
+        if err
+           printWaypoints(waypoints);
+           fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n", x, y, z, theta);
+           error("TaskSpaceCubicSplineTrajectorySetPoints: No valid IK solution found. Time = %d", t);
+        end
         
         jointAngles = [jointAngles, ik_sol];
         times = [times, t];

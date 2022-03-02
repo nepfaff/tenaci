@@ -21,12 +21,16 @@ function stages = taskSpaceStagesFromWaypoints(...
 %gripperOpening is the gripper opening associated with the movement stage.
 %The gripper should be opened to this opening after reaching that stage's
 %final setpoint
+
+    if length(waypoints) < 2
+        error("Need a minimum of 2 waypoints for spline interpolation");
+    end
     
     stages = [];
     for i = 2 : length(waypoints)
         if waypoints(i).groupToPrevious % Spline trajectory connecting a sequence of waypoints
            % Group all waypoints forming this spline trajectory
-           splineWaypoints = [];
+           splineWaypoints = [waypoints(i-1)];
            while waypoints(i).groupToPrevious
                splineWaypoints = [splineWaypoints, waypoints(i)];
                i = i+1;

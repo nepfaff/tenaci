@@ -6,6 +6,10 @@ function cubics = CubicSplineInterpolation(points)
 %where a0, a1, a2, a3 represent the cubic coefficients and xmin, xmax
 %represent the range over which the cubic is defined.
 %Cubic: y = a0 + a1*x + a2*x^2 + a3*x^3
+
+    if length(points) < 2
+       error("Need a minimum of 2 points for spline interpolation"); 
+    end
     
     numberOfCubics = length(points)-1;
     % Each cubic has 4 coefficients

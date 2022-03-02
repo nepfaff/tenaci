@@ -22,9 +22,18 @@ function [jointAngles, times] = TaskSpaceTrajectorySetPoints(startWaypoint, endW
         % Covert into joint space
         ik_sols = OpenManipIK(tool_pose(1), tool_pose(2), tool_pose(3), tool_pose(4));
         if isempty(ik_sols)
-            error("TaskSpaceTrajectorySetPoints: No IK solutions found. time = %d", t);
+            fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
+                tool_pose(1), tool_pose(2), tool_pose(3), tool_pose(4));
+            printWaypoints([startWaypoint, endWaypoint]);
+            error("TaskSpaceTrajectorySetPoints: No IK solutions found. Time = %d", t);
         end
-        ik_sol = getFirstValidIKSol(ik_sols);
+        [ik_sol, err] = getFirstValidIKSol(ik_sols);
+        if err
+           fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
+                tool_pose(1), tool_pose(2), tool_pose(3), tool_pose(4));
+           printWaypoints([startWaypoint, endWaypoint]);
+           error("TaskSpaceTrajectorySetPoints: No valid IK solution found. Time = %d", t);
+        end
         
         jointAngles = [jointAngles, ik_sol];
         times = [times, t];

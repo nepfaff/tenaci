@@ -40,7 +40,7 @@ function waypoints = waypointsForMovingBetweenStartFinish(...
     waypoint.z = gripperZPickUpCube;
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
-    waypoint.groupToPrevious = false;
+    waypoint.groupToPrevious = true; % TODO: Try true
     waypoints = [waypoints, waypoint];
     
     % Pick up cube
@@ -58,7 +58,7 @@ function waypoints = waypointsForMovingBetweenStartFinish(...
     waypoint.z = gripperZAbovePlacedCube;
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
-    waypoint.groupToPrevious = false;
+    waypoint.groupToPrevious = true; % TODO: Try true
     waypoints = [waypoints, waypoint];
     
     % Place down cube
@@ -67,7 +67,7 @@ function waypoints = waypointsForMovingBetweenStartFinish(...
     waypoint.z = gripperZPlaceDownCube;
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperOpenPos;
-    waypoint.groupToPrevious = false;
+    waypoint.groupToPrevious = false; % TODO: Try true
     waypoints = [waypoints, waypoint];
     
     % Move gripper up
