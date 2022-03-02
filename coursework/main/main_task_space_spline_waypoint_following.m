@@ -186,23 +186,7 @@ startPose.groupToPrevious = false;
 % waypoints = [waypoint1, waypoint2, waypoint3];
 
 % Official task 2 cube locations
-start1.x = 0.2;
-start1.y = 0.075;
-start1.direction = "front";
-start2.x = 0.0;
-start2.y = 0.225;
-start2.direction = "down";
-start3.x = -0.15;
-start3.y = 0.15;
-start3.direction = "front";
-startLocations = [start1, start2, start3];
-finish1.x = 0.125;
-finish1.y = 0.125;
-finish2.x = 0.0;
-finish2.y = 0.1;
-finish3.x = -0.1;
-finish3.y = 0.0;
-endLocations = [finish1, finish2, finish3];
+[startLocations, endLocations] = getTask2CubeLocations();
 
 waypoints = waypointsForTask2a(...
     startLocations, endLocations,...
