@@ -1,4 +1,4 @@
-function plot = simulate_stages(stages)
+function plot = simulateStages(stages)
 %SIMULATE_STAGES Opens a 3D simulation of the stage trajectory in a new
 %window
     
