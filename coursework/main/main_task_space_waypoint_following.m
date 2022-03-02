@@ -65,8 +65,9 @@ GRIPPER_CLOSED_POS = 2647;
 GRIPPER_CUBE_HOLD_POS = 2370;
 
 % Cube specific values
-% Cube has sidelength of 2.5cm + extra height through small cube stand
-GRIPPER_Z_CUBE = 0.03;
+% Cube has sidelength of 2.5cm, cube stand's top edge is 19.8mm from
+% base-plate
+GRIPPER_Z_CUBE = 0.045;
 GRIPPER_Z_ABOVE_CUBE = 0.06;
 
 ESC_CHARACTER               = 'e';          % Key for escaping loop
