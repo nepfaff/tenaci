@@ -11,6 +11,6 @@ function sol = getFirstValidIKSol(sols)
     end
     
     if sol == -1
-        fprintf("getFirstValidIKSol: All solutions violate the joint limits");
+        error("getFirstValidIKSol: All solutions violate the joint limits");
     end
 end
