@@ -56,7 +56,7 @@ function [jointAngles, times] = TaskSpaceCubicSplineTrajectorySetPoints(...
             zCubics(currentCubicIdx).a2*t^2 + zCubics(currentCubicIdx).a3*t^3;
         theta = thetaCubics(currentCubicIdx).a0 + thetaCubics(currentCubicIdx).a1*t + ...
             thetaCubics(currentCubicIdx).a2*t^2 + thetaCubics(currentCubicIdx).a3*t^3;
-        
+
         % Covert into joint space
         ik_sols = OpenManipIK(x, y, z, theta);
         if isempty(ik_sols)

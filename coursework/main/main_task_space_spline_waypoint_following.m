@@ -44,7 +44,7 @@ DXL_ID3                      = 13;
 DXL_ID4                      = 14;
 DXL_ID5                      = 15;
 BAUDRATE                    = 1000000;
-DEVICENAME                  = 'COM3';       % Check which port is being used on your controller
+DEVICENAME                  = 'COM5';       % Check which port is being used on your controller
                                             % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
 % Link lengths in cm
 LINK_LENGTH_1 = 8;
@@ -62,7 +62,8 @@ DXL_MOVING_STATUS_THRESHOLD = 20;           % Dynamixel moving status threshold
 % Values to send to the gripper
 GRIPPER_OPEN_POS = 1800;
 GRIPPER_CLOSED_POS = 2647;
-GRIPPER_CUBE_HOLD_POS = 2370;
+GRIPPER_CUBE_HOLD_POS = 2450;
+GRIPPER_PEN_CUBE_HOLD_POS = 2250;
 
 [GRIPPER_Z_PICK_UP_CUBE_FACING_DOWN, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_DOWN,...
 GRIPPER_Z_PICK_UP_CUBE_FACING_STRAIGHT, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_STRAIGHT]...
@@ -142,11 +143,11 @@ write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_PRO_DRIVE_MODE, TIME_BA
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID5, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
 
 % Disable Dynamixel Torque (Should either enable or disable torque)
-% disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
-% disableDynamixelTorque(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
-% disableDynamixelTorque(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
-% disableDynamixelTorque(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
-% disableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
+disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
+disableDynamixelTorque(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
+disableDynamixelTorque(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
+disableDynamixelTorque(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
+disableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
 
 % Enable Dynamixel Torque (Should either enable or disable torque)
 enableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
@@ -159,8 +160,8 @@ enableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABL
 startPose.x = 0.0;
 startPose.y = 0.274;
 startPose.z = 0.2048;
-startPose.theta = 0.0;
-startPose.gripper = GRIPPER_OPEN_POS;
+startPose.theta = 0.0; 
+startPose.gripper = GRIPPER_PEN_CUBE_HOLD_POS;
 startPose.groupToPrevious = false;
 
 % Define waypoints (must include startPose!)
@@ -241,7 +242,7 @@ startIKSol = getFirstValidIKSol(startIKSols);
 
 % Convert joint angles into encoder values
 pos1 = radiansToEncoder(startIKSol.joint1_angle);
-pos2 = radiansToEncoder(startIKSol.joint2_angle);
+pos2 = radiansToEncoder(startIKSol.joint2_angle-0.1); % Compensate for hardware bend (-0.1 rad)
 pos3 = radiansToEncoder(startIKSol.joint3_angle);
 pos4 = radiansToEncoder(startIKSol.joint4_angle);
 
@@ -251,8 +252,41 @@ writePosition(DXL_ID2, pos2, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_
 writePosition(DXL_ID3, pos3, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
 writePosition(DXL_ID4, pos4, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
 
+% Gripper configuration
+writePosition(DXL_ID5, startPose.gripper, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+
 disp("Press any keay to start the main task sequence!");
 pause;
+
+% Optional FK printing loop
+while false
+    % Read all encoder positions
+    pos1 = getPosition(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos2 = getPosition(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos3 = getPosition(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos4 = getPosition(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos5 = getPosition(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID1, pos1);
+%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID2, pos2);
+%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID3, pos3);
+%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID4, pos4);
+%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID5, pos5);
+%     
+%     % Convert all encoder positions into radians
+    joint1_angle = encoderToRadians(pos1);
+    joint2_angle = encoderToRadians(pos2);
+    joint3_angle = encoderToRadians(pos3);
+    joint4_angle = encoderToRadians(pos4);
+    gripper_angle = encoderToRadians(pos5);
+%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID1, joint1_angle);
+%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID2, joint2_angle);
+%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID3, joint3_angle);
+%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID4, joint4_angle);
+%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID5, gripper_angle);
+    
+    % Get tool position
+    [tool_x, tool_y, tool_z] = OpenManipFK(joint1_angle, joint2_angle, joint3_angle, joint4_angle)
+end
 
 % Main stage sequence
 for i = 1 : length(stages)

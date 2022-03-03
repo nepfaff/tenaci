@@ -61,7 +61,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     % Rotate gripper and move to place down (end) location
     waypoint.x = endX;
     waypoint.y = endY;
-    waypoint.z = gripperZPlaceDownCubeFacingStraight;
+    waypoint.z = gripperZPlaceDownCubeFacingStraight +0.05;
     waypoint.theta = 0.0;
     waypoint.gripper = gripperCubeHoldPos;
     waypoint.groupToPrevious = false; % TODO: try true
@@ -70,7 +70,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     % Place down cube
     waypoint.x = endX;
     waypoint.y = endY;
-    waypoint.z = gripperZAbovePlacedCubeFacingStraight ;
+    waypoint.z = gripperZPlaceDownCubeFacingStraight;
     waypoint.theta = 0.0;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
@@ -79,7 +79,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     % Move gripper up
     waypoint.x = endX;
     waypoint.y = endY;
-    waypoint.z = gripperZPlaceDownCubeFacingStraight;
+    waypoint.z = gripperZAbovePlacedCubeFacingStraight;
     waypoint.theta = 0.0;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
