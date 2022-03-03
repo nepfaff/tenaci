@@ -27,7 +27,8 @@ function stages = taskSpaceStagesFromWaypoints(...
     end
     
     stages = [];
-    for i = 2 : length(waypoints)
+    i = 2;
+    while i <= length(waypoints)
         if waypoints(i).groupToPrevious % Spline trajectory connecting a sequence of waypoints
            % Group all waypoints forming this spline trajectory
            splineWaypoints = [waypoints(i-1)];
@@ -52,5 +53,7 @@ function stages = taskSpaceStagesFromWaypoints(...
         % Use last gripper opening of waypoint sequence
         stage.gripperOpening = waypoints(i).gripper;
         stages = [stages, stage];
+        
+        i = i+1;
     end
 end
