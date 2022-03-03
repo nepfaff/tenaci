@@ -37,21 +37,22 @@ waypoints = [line1Start, line1End, line2End];
 for i = 1 : length(waypoints)
    waypoints(i).theta = 0.0;
    waypoints(i).gripper = GRIPPER_CUBE_HOLD_POS;
-   waypoints(i).groupToPrevious = false; % This should be true for circles
+   % This should be true for circles
+   % Lines are more straight if they are defined by start and end waypoints
+   % that are not grouped together. Multiple intermediate waypoints for
+   % lines works less well.
+   waypoints(i).groupToPrevious = false;
 end
 
 % Draw arc
-% arc = drawArc([-0.05, 0.2, 0.05], [0.010, 0.1, 0.05], 10, 1);
-% waypoints = [];
-% for i = 1 : length(arc)
-%     waypoint.x = arc(i,1);
-%     waypoint.y = arc(i,2);
-%     waypoint.z = arc(i,3);
-%     waypoint.theta = 0.0;
-%     waypoint.gripper = GRIPPER_CUBE_HOLD_POS;
-%     waypoint.groupToPrevious = true;
-%     waypoints = [waypoints, waypoint];
-% end
+arc = drawArc([0.1, 0.21, 0.05], [0.0, 0.16, 0.05], pi*.75, 0.1);
+w = generateWaypointsByList(arc, 0.0, 0.0);
+for i = 1 : length(w)
+    w(i).theta = 0.0;
+    w(i).gripper = GRIPPER_CUBE_HOLD_POS;
+    w(i).groupToPrevious = (i ~= 1);
+    waypoints = [waypoints, w(i)];
+end
 
 waypoints = [startPose, waypoints];
 
