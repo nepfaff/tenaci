@@ -31,7 +31,7 @@ function stages = taskSpaceStagesFromWaypoints(...
         if waypoints(i).groupToPrevious % Spline trajectory connecting a sequence of waypoints
            % Group all waypoints forming this spline trajectory
            splineWaypoints = [waypoints(i-1)];
-           while waypoints(i).groupToPrevious
+           while i <= length(waypoints) && waypoints(i).groupToPrevious
                splineWaypoints = [splineWaypoints, waypoints(i)];
                i = i+1;
            end
