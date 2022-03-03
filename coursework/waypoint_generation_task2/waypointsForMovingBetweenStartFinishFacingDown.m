@@ -1,25 +1,19 @@
-function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
+function waypoints = waypointsForMovingBetweenStartFinishFacingDown(...
     startX, startY, endX, endY,...
-    gripperZPickUpCubeFacingStraight, gripperZAbovePickUpCubeFacingStraight,...
+    gripperZPickUpCubeFacingDown, gripperZAbovePickUpCubeFacingDown,...
     gripperZPlaceDownCubeFacingDown, gripperZAbovePlacedCubeFacingDown,...
     gripperOpenPos, gripperCubeHoldPos...
 )
-%WAYPOINTSFORPICKFACINGSTRAIGHTPLACEFACINGDOWN Waypoints for picking up a
-%cube with the gripper facing straight and placing it down with the gripper
-%facing down. The bottom face of the original cube will be the face
-%facing towards the gripper of the moved cube.
-%gripperZPickUpCubeFacingStraight is a z-coordinate above the pick up cube
-%where the gripper can savely move around. Relevant when the picking up a
-%cube with the gripper facing straight.
-%gripperZAbovePickUpCubeFacingStraight is a z-coordinate above the placed down
-%cube where the gripper can savely move around. Relevant when the picking
-%up a cube with the gripper facing straight.
+%WAYPOINTSFORMOVINGBETWEENSTARTFINISH Waypoints for picking up a cube at
+%the start location and placing it down at the end location.
+%gripperZPickUpCubeFacingDown is the z-coordinate where the gripper should
+%pick up the cube.
+%gripperZPickUpCubeFacingDown is a z-coordinate above the pick up cube
+%where the gripper can savely move around.
 %gripperZPlaceDownCubeFacingDown is the z-coordinate where the gripper
-%should place down the cube. Relevant when the picking up a cube with the gripper
-%facing down.
+%should place down the cube.
 %gripperZAbovePlacedCubeFacingDown is a z-coordinate above the placed down
-%cube where the gripper can savely move around. Relevant when the picking
-%up a cube with the gripper facing down.
+%cube where the gripper can savely move around.
 %gripperOpenPos is the encoder value that results in an open gripper.
 %gripperCubeHoldPos is the encoder value that results in a gripper that
 %tightly encloses a cube.
@@ -34,8 +28,8 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     % Move to pick up (start) location
     waypoint.x = startX;
     waypoint.y = startY;
-    waypoint.z = gripperZAbovePickUpCubeFacingStraight;
-    waypoint.theta = 0.0;
+    waypoint.z = gripperZAbovePickUpCubeFacingDown;
+    waypoint.theta = -pi/2;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
     waypoints = [waypoints, waypoint];
@@ -43,28 +37,28 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     % Grab cube
     waypoint.x = startX;
     waypoint.y = startY;
-    waypoint.z = gripperZPickUpCubeFacingStraight;
-    waypoint.theta = 0.0;
+    waypoint.z = gripperZPickUpCubeFacingDown;
+    waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
-    waypoint.groupToPrevious = false;
+    waypoint.groupToPrevious = true; % TODO: Try true
     waypoints = [waypoints, waypoint];
     
     % Pick up cube
     waypoint.x = startX;
     waypoint.y = startY;
-    waypoint.z = gripperZAbovePickUpCubeFacingStraight;
-    waypoint.theta = 0.0;
+    waypoint.z = gripperZAbovePickUpCubeFacingDown;
+    waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
-    waypoint.groupToPrevious = false; % TODO: try true
+    waypoint.groupToPrevious = false;
     waypoints = [waypoints, waypoint];
     
-    % Rotate gripper and move to place down (end) location
+    % Move to place down (end) location
     waypoint.x = endX;
     waypoint.y = endY;
     waypoint.z = gripperZAbovePlacedCubeFacingDown;
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
-    waypoint.groupToPrevious = false; % TODO: try true
+    waypoint.groupToPrevious = true; % TODO: Try true
     waypoints = [waypoints, waypoint];
     
     % Place down cube
@@ -73,7 +67,7 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     waypoint.z = gripperZPlaceDownCubeFacingDown;
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperOpenPos;
-    waypoint.groupToPrevious = false;
+    waypoint.groupToPrevious = false; % TODO: Try true
     waypoints = [waypoints, waypoint];
     
     % Move gripper up
