@@ -39,6 +39,10 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     waypoint.theta = 0.0;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
+    if ~doValidIKExist([waypoint])
+        waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
+            gripperZPickUpCubeFacingStraight);
+    end
     waypoints = [waypoints, waypoint];
     
     % Grab cube
@@ -60,6 +64,10 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     [xOffset, yOffset] = computeXYOffset(gripperPickDownOffset, waypoint);
     waypoint.x = waypoint.x - xOffset;
     waypoint.y = waypoint.y - yOffset;
+    if ~doValidIKExist([waypoint])
+        waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
+            gripperZPickUpCubeFacingStraight);
+    end
     waypoints = [waypoints, waypoint];
     
     % Rotate gripper and move to place down (end) location
@@ -69,6 +77,10 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
     waypoint.groupToPrevious = false; % TODO: try true
+    if ~doValidIKExist([waypoint])
+        waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
+            gripperZPlaceDownCubeFacingDown);
+    end
     waypoints = [waypoints, waypoint];
     
     % Place down cube
@@ -87,5 +99,9 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
+    if ~doValidIKExist([waypoint])
+        waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
+            gripperZPlaceDownCubeFacingDown);
+    end
     waypoints = [waypoints, waypoint];
 end

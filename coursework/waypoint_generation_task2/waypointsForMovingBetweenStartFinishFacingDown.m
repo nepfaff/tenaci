@@ -69,7 +69,7 @@ function waypoints = waypointsForMovingBetweenStartFinishFacingDown(...
     waypoint.groupToPrevious = false; % TODO: Try true
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
-            gripperZPickUpCubeFacingDown);
+            gripperZPlaceDownCubeFacingDown);
     end
     waypoints = [waypoints, waypoint];
     
@@ -91,7 +91,7 @@ function waypoints = waypointsForMovingBetweenStartFinishFacingDown(...
     waypoint.groupToPrevious = false;
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
-            gripperZPickUpCubeFacingDown);
+            gripperZPlaceDownCubeFacingDown);
     end
     waypoints = [waypoints, waypoint];
 end

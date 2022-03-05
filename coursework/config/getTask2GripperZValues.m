@@ -11,7 +11,7 @@ function...
     GRIPPER_Z_PICK_UP_CUBE_FACING_DOWN = 0.057;
     GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_DOWN = 0.075;
     
-    GRIPPER_Z_PICK_UP_CUBE_FACING_STRAIGHT = 0.035;
+    GRIPPER_Z_PICK_UP_CUBE_FACING_STRAIGHT = 0.04;
     GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_STRAIGHT = 0.07;
     
     % Gripper can't pick cube in the middle when picking facing down
