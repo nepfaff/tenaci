@@ -87,7 +87,7 @@ function plot = simulateStages(stages)
             frame3_y = plot3([pos3(1), pos3(1) +  y_dir3(1)], [pos3(2), pos3(2)+ y_dir3(2)], [pos3(3), pos3(3)+ y_dir3(3)], 'Color','g','LineWidth',2);
             frame3_z = plot3([pos3(1), pos3(1) + z_dir3(1) ], [pos3(2),pos3(2) + z_dir3(2)], [pos3(3), pos3(3)+ z_dir3(3)], 'Color','b','LineWidth',2);
          %plot forth frame and end tool location
-            line4 = plot3([pos3(1), pos4(1)], [pos3(2), pos4(2)], [pos3(3), pos4(3)], 'Color','black','LineWidth',2);
+            line4 =plot3([pos3(1), pos4(1)], [pos3(2), pos4(2)], [pos3(3), pos4(3)], 'Color','black','LineWidth',2);
             frame4_x = plot3([pos4(1), pos4(1) +  x_dir4(1)], [pos4(2), pos4(2) +  x_dir4(2)], [pos4(3), pos4(3)+  x_dir4(3)], 'Color','r','LineWidth',2);
             frame4_y = plot3([pos4(1), pos4(1) +  y_dir4(1)], [pos4(2), pos4(2) + y_dir4(2)], [pos4(3), pos4(3)+ y_dir4(3)], 'Color','g','LineWidth',2);
             frame4_z = plot3([pos4(1), pos4(1) + z_dir4(1) ], [pos4(2), pos4(2) + z_dir4(2)], [pos4(3), pos4(3)+ z_dir4(3)], 'Color','b','LineWidth',2);

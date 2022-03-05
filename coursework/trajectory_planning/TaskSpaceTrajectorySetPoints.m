@@ -25,14 +25,14 @@ function [jointAngles, times] = TaskSpaceTrajectorySetPoints(startWaypoint, endW
             fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
                 tool_pose(1), tool_pose(2), tool_pose(3), tool_pose(4));
             printWaypoints([startWaypoint, endWaypoint]);
-            error("TaskSpaceTrajectorySetPoints: No IK solutions found. Time = %d", t);
+            error("TaskSpaceTrajectorySetPoints: No IK solutions found. Time = %d\n", t);
         end
         [ik_sol, err] = getFirstValidIKSol(ik_sols);
         if err
            fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
                 tool_pose(1), tool_pose(2), tool_pose(3), tool_pose(4));
            printWaypoints([startWaypoint, endWaypoint]);
-           error("TaskSpaceTrajectorySetPoints: No valid IK solution found. Time = %d", t);
+           error("TaskSpaceTrajectorySetPoints: No valid IK solution found. Time = %d\n", t);
         end
         
         jointAngles = [jointAngles, ik_sol];

@@ -71,7 +71,7 @@ end
 function [t1, t2, t1_, t2_] = TwoRIK(l1, l2, x, y)
     c2 = (x^2 + y^2 - l1^2 - l2^2) / (2*l1*l2);
     if (abs(c2) > 1)
-       fprintf("No possible IK solution: %d", c2);
+       %fprintf("OpenManipIK: TwoRIK: No possible IK solution: %d\n", c2);
        t1 = inf;
        t2 = inf;
        t1_ = inf;
