@@ -1,4 +1,4 @@
-function [xOffset, yOffset] = computePickDownOffsetXY(offset, waypoint)
+function [xOffset, yOffset] = computeXYOffset(offset, waypoint)
 %COMPUTEPICKDOWNOFFSETXY
 
     ik_sols = OpenManipIK(waypoint.x, waypoint.y, waypoint.z, waypoint.theta);
@@ -11,7 +11,7 @@ function [xOffset, yOffset] = computePickDownOffsetXY(offset, waypoint)
     if err
        fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
                 waypoint.x, waypoint.y, waypoint.z, waypoint.theta);
-       error("computePickDownOffsetXY: No valid IK solution found\n");
+       error("computeXYOffset: No valid IK solution found\n");
     end
     
     % Angle in x-y plane (always in range [-pi, pi])
