@@ -27,12 +27,12 @@ waypoint4.y = 0.1;
 waypoint4.z = 0.1;
 waypoint4.theta = -0.523;
 waypoint4.gripper = 0;
-
+% 
 timeForTrajectory = 1
 samplePeriod = 0.1
-
+% 
 waypoints = [waypoint1, waypoint2, waypoint3, waypoint4]
-
+% 
 % shape = myplot()
 % shapecon = shape
 % shapecon(:,1) = shapecon(:,1)-125
@@ -85,21 +85,21 @@ function plot = taskspance_sim(waypoints, timeForTrajectory, samplePeriod)
             beta = pi/2 - atan(0.024/0.128)
 
            % define base frame
-            T0 = tfFromDH(0.0, 0.0, 0.0, thetas1(j))
+            T0 = tfFromDH(0.0, 0.0, 0.0, thetas1(j)+pi/2)
             x_dir0 = T0(1:3,1)*0.01
             y_dir0 = T0(1:3,2)*0.01
             z_dir0 = T0(1:3,3)*0.01
             pos0 = T0(:,4)
 
            % define first joint and frame loation 
-            T1 = T0* tfFromDH(0, 0.0, 0.077,pi/2);
+            T1 = T0* tfFromDH(0, 0.0, 0.077,0) * tfFromDH(pi/2, 0.0, 0., -thetas2(j)+ beta);
             x_dir1 = T1(1:3,1)*0.01
             y_dir1 = T1(1:3,2)*0.01
             z_dir1 = T1(1:3,3)*0.01
             pos1 = T1(:,4)
 
            % define second joint and frame location
-            T2 = T1 * tfFromDH(pi/2, 0.0, 0.0, -thetas2(j)+ beta)* tfFromDH(0.0, 0.130, 0, -thetas3(j)-beta);
+            T2 = T1* tfFromDH(0.0, 0.130, 0, -thetas3(j)-beta);
             x_dir2 = T2(1:3,1)*0.01
             y_dir2 = T2(1:3,2)*0.01
             z_dir2 = T2(1:3,3)*0.01
