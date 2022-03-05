@@ -1,17 +1,35 @@
 function [xOffset, yOffset] = computeXYOffset(offset, waypoint)
-%COMPUTEPICKDOWNOFFSETXY
-
-    ik_sols = OpenManipIK(waypoint.x, waypoint.y, waypoint.z, waypoint.theta);
-        if isempty(ik_sols)
-            fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
-                waypoint.x, waypoint.y, waypoint.z, waypoint.theta);
-            error("computePickDownOffsetXY: No IK solutions found\n");
+%COMPUTEXYOFFSET
+    
+    % We don't care about the z-value or theta (theoretically could move
+    % all but joint angle 1:
+    % We want the waypoint to be potentially reachable after offseting it,
+    % even if it is not currently reachable
+    for z = 0 : 0.01 : 0.5
+        for theta = -pi/2 : 0.15 : pi/2
+            ik_sols = OpenManipIK(waypoint.x, waypoint.y, z, theta);
+            if isempty(ik_sols)
+                continue;
+            end
+            [ik_sol, err] = getFirstValidIKSol(ik_sols);
+            if err
+                continue;
+            end
+            break;
         end
-    [ik_sol, err] = getFirstValidIKSol(ik_sols);
-    if err
+        if isempty(ik_sols)
+            continue;
+        end
+        [ik_sol, err] = getFirstValidIKSol(ik_sols);
+        if err
+            continue;
+        end
+        break;
+    end
+    if z == 0.5
        fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
                 waypoint.x, waypoint.y, waypoint.z, waypoint.theta);
-       error("computeXYOffset: No valid IK solution found\n");
+       error("computeXYOffset: No valid IK solution found\n"); 
     end
     
     % Angle in x-y plane (always in range [-pi, pi])
