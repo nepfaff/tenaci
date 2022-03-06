@@ -296,6 +296,7 @@ while false
 end
 
 % Main stage sequence
+currentGripper = startPose.gripper;
 for i = 1 : length(stages)
     jointAngles = stages(i).setPointJointAngles;
     
@@ -314,8 +315,11 @@ for i = 1 : length(stages)
         pause(samplePeriod/2); % Try to send next set point at max velocity
     end
     
-    % Ensure that have time to reach waypoint
-    pause(2);
+    % Ensure that have time to reach the waypoint before changing the
+    % gripper opening
+    if currentGripper ~= stages(i).gripperOpening
+        pause(0.5);
+    end
 
     % Gripper configuration
     writePosition(DXL_ID5, stages(i).gripperOpening, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
