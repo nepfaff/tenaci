@@ -289,7 +289,10 @@ while false
 %     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID5, gripper_angle);
     
     % Get tool position
-    [tool_x, tool_y, tool_z] = OpenManipFK(joint1_angle, joint2_angle, joint3_angle, joint4_angle)
+    [tool_x, tool_y, tool_z, tool_theta] = OpenManipFK(...
+        joint1_angle, joint2_angle, joint3_angle, joint4_angle);
+    fprintf("tool_x: %f, tool_y: %f, tool_z: %f, tool_theta: %f",...
+        tool_x, tool_y, tool_z, tool_theta);
 end
 
 % Main stage sequence

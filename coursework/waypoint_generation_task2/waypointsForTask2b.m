@@ -76,4 +76,6 @@ function waypoints = waypointsForTask2b(...
             fprintf("ERROR in waypointsForTask2b: Direction %s is invalid", loc.direction)
         end
     end
+    
+    waypoints = insertCubeAvoidanceWaypoints(waypoints, 0.1, pi/6);
 end
