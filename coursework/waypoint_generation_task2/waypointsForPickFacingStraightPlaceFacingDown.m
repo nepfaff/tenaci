@@ -81,7 +81,10 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPlaceDownCubeFacingDown);
     end
-    waypoints = [waypoints, waypoint];
+    waypoints = [
+        waypoints,...
+        addCollisionAvoidanceWhileRotatingWaypoint(waypoint, pi/36)
+    ];
     
     % Place down cube
     waypoint.x = endX;

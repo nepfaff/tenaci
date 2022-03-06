@@ -65,7 +65,10 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPickUpCubeFacingDown);
     end
-    waypoints = [waypoints, waypoint];
+    waypoints = [
+        waypoints,...
+        addCollisionAvoidanceWhileRotatingWaypoint(waypoint, pi/36)
+    ];
     
     % Rotate gripper and move to place down (end) location
     waypoint.x = endX;
