@@ -18,6 +18,7 @@ startPose.z = 0.2048;
 startPose.theta = 0.0;
 startPose.gripper = GRIPPER_OPEN_POS;
 startPose.groupToPrevious = false;
+startPose.timeForTrajectory = 0.0;
 
 [startLocations, endLocations] = getTask2CubeLocations();
 
@@ -37,6 +38,7 @@ waypoints = [line1Start, line1End, line2End];
 for i = 1 : length(waypoints)
    waypoints(i).theta = 0.0;
    waypoints(i).gripper = GRIPPER_CUBE_HOLD_POS;
+   waypoints(i).timeForTrajectory = 1.0;
    % This should be true for circles
    % Lines are more straight if they are defined by start and end waypoints
    % that are not grouped together. Multiple intermediate waypoints for
@@ -51,15 +53,15 @@ for i = 1 : length(w)
     w(i).theta = 0.0;
     w(i).gripper = GRIPPER_CUBE_HOLD_POS;
     w(i).groupToPrevious = (i ~= 1);
+    w(i).timeForTrajectory = 2.0;
     waypoints = [waypoints, w(i)];
 end
 
 waypoints = [startPose, waypoints];
 
-timeForTrajectory = 1; % In seconds
 samplePeriod = 0.1; % In seconds
 stages = taskSpaceStagesFromWaypoints(...
-    waypoints, timeForTrajectory, samplePeriod...
+    waypoints, samplePeriod...
 );
 
 simulateStages(stages);
