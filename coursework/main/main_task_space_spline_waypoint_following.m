@@ -305,6 +305,20 @@ for i = 1 : length(stages)
     
     % Send set points to robot
     for j = 1 : length(jointAngles)
+        % Optionally print tool pose
+%         pos1 = getPosition(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+%         pos2 = getPosition(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+%         pos3 = getPosition(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+%         pos4 = getPosition(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+%         joint1_angle = encoderToRadians(pos1);
+%         joint2_angle = encoderToRadians(pos2);
+%         joint3_angle = encoderToRadians(pos3);
+%         joint4_angle = encoderToRadians(pos4);
+%         [tool_x, tool_y, tool_z, tool_theta] = OpenManipFK(...
+%         joint1_angle, joint2_angle, joint3_angle, joint4_angle);
+%         fprintf("tool_x: %f, tool_y: %f, tool_z: %f, tool_theta: %f",...
+%             tool_x, tool_y, tool_z, tool_theta);
+        
         pos1 = radiansToEncoder(jointAngles(j).joint1_angle);
         pos2 = radiansToEncoder(jointAngles(j).joint2_angle);
         pos3 = radiansToEncoder(jointAngles(j).joint3_angle);
