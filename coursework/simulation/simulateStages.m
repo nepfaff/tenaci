@@ -10,7 +10,7 @@ function plot = simulateStages(stages)
     xlim([-0.3, 0.3])
     ylim([-0.3, 0.3])
     zlim([0 0.42])
-    title("Forward Kinematics")
+    title("Simulate Stages")
     grid on
     hold on
 
