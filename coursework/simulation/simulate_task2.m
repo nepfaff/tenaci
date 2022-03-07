@@ -17,6 +17,7 @@ startPose.z = 0.2048;
 startPose.theta = 0.0;
 startPose.gripper = GRIPPER_OPEN_POS;
 startPose.groupToPrevious = false;
+startPose.timeForTrajectory = 0.0;
 
 [startLocations, endLocations] = getTask2CubeLocations();
 
@@ -47,10 +48,14 @@ waypoints = waypointsForTask2b(...
 
 waypoints = [startPose, waypoints];
 
-timeForTrajectory = 1.5; % In seconds
+% Slow down simulation by a constant time
+additionalTimePerTrajectory = 1.0;
+temp = num2cell([waypoints.timeForTrajectory] + additionalTimePerTrajectory);
+[waypoints.timeForTrajectory] = temp{:};
+
 samplePeriod = 0.1; % In seconds
 stages = taskSpaceStagesFromWaypoints(...
-    waypoints, timeForTrajectory, samplePeriod...
+    waypoints, samplePeriod...
 );
 
 simulateStages(stages);

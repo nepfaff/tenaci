@@ -165,6 +165,7 @@ startPose.z = 0.2048;
 startPose.theta = 0.0; 
 startPose.gripper = GRIPPER_PEN_CUBE_HOLD_POS;
 startPose.groupToPrevious = false;
+startPose.timeForTrajectory = 0.0;
 
 % Define waypoints (must include startPose!)
 % waypoint1.x = 0.0;
@@ -173,11 +174,13 @@ startPose.groupToPrevious = false;
 % waypoint1.theta = -pi/2;
 % waypoint1.gripper = GRIPPER_OPEN_POS;
 % waypoint1.groupToPrevious = false;
+% waypoint1.timeForTrajectory = 1.0;
 % waypoint2.x = 0.21;
 % waypoint2.y = 0.0;
 % waypoint2.z = 0.06;
 % waypoint2.theta = -pi/2;
 % waypoint2.gripper = GRIPPER_CLOSED_POS;
+% waypoint2.timeForTrajectory = 1.0;
 % waypoint3.groupToPrevious = false;
 % waypoint3.x = 0;
 % waypoint3.y = 0.274;
@@ -185,6 +188,7 @@ startPose.groupToPrevious = false;
 % waypoint3.theta = 0;
 % waypoint3.gripper = -pi/2;
 % waypoint3.groupToPrevious = false;
+% waypoint3.timeForTrajectory = 1.0;
 % waypoints = [waypoint1, waypoint2, waypoint3];
 
 % Official task 2 cube locations
@@ -218,10 +222,9 @@ waypoints = waypointsForTask2a(...
 waypoints = [startPose, waypoints];
 
 % Convert waypoints into stages (sequences of set points) using trajectory planning
-timeForTrajectory = 1; % In seconds
 samplePeriod = 0.1; % In seconds
 stages = taskSpaceStagesFromWaypoints(...
-    waypoints, timeForTrajectory, samplePeriod...
+    waypoints, samplePeriod...
 );
 
 % Set velocity and acceleration

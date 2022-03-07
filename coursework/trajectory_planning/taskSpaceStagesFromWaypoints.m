@@ -1,17 +1,15 @@
 function stages = taskSpaceStagesFromWaypoints(...
-    waypoints, timeForTrajectory, samplePeriod...
+    waypoints, samplePeriod...
 )
 %TASKSPACESETPOINTSFROMWAYPOINTS Converts a list of waypoints into a list
 %of stages using task space trajectories. Groups waypoints labeled
 %using groupToPrevious into a spline trajectory. All other waypoints will
 %be directly connected using a cubic trajectory.
 %waypoints is a list of waypoint structs with attributes x, y, z, theta,
-%gripper, and groupToPrevious. The list must include the gripper's starting
-%pose.
-%timeForTrajectory is the time in seconds to use for trajectories. This is
-%used for individual trajectories rather than the time for all waypoints
+%gripper, groupToPrevious, and timeForTrajectory. The list must include the
+%gripper's starting pose.
 %samplePeriod is the sample period for sampling the set points from the
-%trajectory functions
+%trajectory functions.
 %stages is a list of structs with attributes setPointJointAngles,
 %setPointTimes, and gripperOpening:
 %setPointJointAngles is a list of joint angle stucts with attributes
@@ -37,12 +35,14 @@ function stages = taskSpaceStagesFromWaypoints(...
                i = i+1;
            end
            i = i-1;
-
+           
+           timeForTrajectory = splineWaypoints(length(splineWaypoints)).timeForTrajectory;
            [setPointJointAngles, setPointTimes] = TaskSpaceCubicSplineTrajectorySetPoints(...
                 splineWaypoints, timeForTrajectory, samplePeriod...
             );
 
         else % Direct trajectory between waypoints
+            timeForTrajectory = waypoints(i).timeForTrajectory;
             [setPointJointAngles, setPointTimes] = TaskSpaceTrajectorySetPoints(...
                 waypoints(i-1), waypoints(i), timeForTrajectory, samplePeriod...
             );

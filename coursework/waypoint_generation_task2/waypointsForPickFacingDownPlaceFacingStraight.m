@@ -39,6 +39,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
+    waypoint.timeForTrajectory = 1.0;
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPickUpCubeFacingDown);
@@ -52,6 +53,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
     waypoint.groupToPrevious = false;
+    waypoint.timeForTrajectory = 0.5;
     waypoints = [waypoints, waypoint];
     
     % Pick up cube
@@ -61,6 +63,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
     waypoint.groupToPrevious = false; % TODO: try true
+    waypoint.timeForTrajectory = 0.5;
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPickUpCubeFacingDown);
@@ -77,6 +80,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.theta = 0.0;
     waypoint.gripper = gripperCubeHoldPos;
     waypoint.groupToPrevious = false; % TODO: try true
+    waypoint.timeForTrajectory = 1.0;
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPlaceDownCubeFacingStraight);
@@ -90,6 +94,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.theta = 0.0;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
+    waypoint.timeForTrajectory = 0.5;
     [xOffset, yOffset] = computeXYOffset(gripperPickDownOffset, waypoint);
     waypoint.x = waypoint.x - xOffset;
     waypoint.y = waypoint.y - yOffset;
@@ -102,6 +107,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.theta = 0.0;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
+    waypoint.timeForTrajectory = 0.5;
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPlaceDownCubeFacingStraight);
