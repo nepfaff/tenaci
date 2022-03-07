@@ -1,6 +1,11 @@
-function [jointAngles, times] = TaskSpaceTrajectorySetPoints(startWaypoint, endWaypoint, timeForTrajectory, samplePeriod)
+function [jointAngles, times, failedPoints] = TaskSpaceTrajectorySetPoints(...
+    startWaypoint, endWaypoint, timeForTrajectory, samplePeriod)
 %TASKSPACETRAJECTORYSETPOINTS Returns samples of a cubic task space
 %interpolation in joint space representation.
+%failedPoints is equal to the number of set-points that were skipped due to
+%non-valid IK solutions.
+
+    failedPoints = 0;
     
     startToolPose = waypointToPoseVector(startWaypoint);
     endToolPose = waypointToPoseVector(endWaypoint);
@@ -22,17 +27,23 @@ function [jointAngles, times] = TaskSpaceTrajectorySetPoints(startWaypoint, endW
         % Covert into joint space
         ik_sols = OpenManipIK(tool_pose(1), tool_pose(2), tool_pose(3), tool_pose(4));
         if isempty(ik_sols)
-            fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
-                tool_pose(1), tool_pose(2), tool_pose(3), tool_pose(4));
-            printWaypoints([startWaypoint, endWaypoint]);
-            error("TaskSpaceTrajectorySetPoints: No IK solutions found. Time = %d\n", t);
+%             fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
+%                 tool_pose(1), tool_pose(2), tool_pose(3), tool_pose(4));
+%             printWaypoints([startWaypoint, endWaypoint]);
+%             error("TaskSpaceTrajectorySetPoints: No IK solutions found. Time = %d\n", t);
+
+            failedPoints = failedPoints + 1;
+            continue
         end
         [ik_sol, err] = getFirstValidIKSol(ik_sols);
         if err
-           fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
-                tool_pose(1), tool_pose(2), tool_pose(3), tool_pose(4));
-           printWaypoints([startWaypoint, endWaypoint]);
-           error("TaskSpaceTrajectorySetPoints: No valid IK solution found. Time = %d\n", t);
+%            fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
+%                 tool_pose(1), tool_pose(2), tool_pose(3), tool_pose(4));
+%            printWaypoints([startWaypoint, endWaypoint]);
+%            error("TaskSpaceTrajectorySetPoints: No valid IK solution found. Time = %d\n", t);
+    
+           failedPoints = failedPoints + 1;
+           continue
         end
         
         jointAngles = [jointAngles, ik_sol];

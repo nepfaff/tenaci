@@ -1,12 +1,16 @@
-function [jointAngles, times] = TaskSpaceCubicSplineTrajectorySetPoints(...
+function [jointAngles, times, failedPoints] = TaskSpaceCubicSplineTrajectorySetPoints(...
     waypoints, timeForTrajectory, samplePeriod...
 )
 %TASKSPACECUBICSPINETRAJECTORYSETPOINTS Returns samples of a cubic task
 %space spine interpolation in joint space representation.
+%failedPoints is equal to the number of set-points that were skipped due to
+%non-valid IK solutions.
 
     if length(waypoints) < 2
         error("Need a minimum of 2 waypoints for spline interpolation");
     end
+    
+    failedPoints = 0;
 
     timeBetweenWaypoints = timeForTrajectory / (length(waypoints)-1);
     
@@ -60,15 +64,21 @@ function [jointAngles, times] = TaskSpaceCubicSplineTrajectorySetPoints(...
         % Covert into joint space
         ik_sols = OpenManipIK(x, y, z, theta);
         if isempty(ik_sols)
-            printWaypoints(waypoints);
-            fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n", x, y, z, theta);
-            error("TaskSpaceCubicSplineTrajectorySetPoints: No IK solutions found. Time = %d", t);
+%             printWaypoints(waypoints);
+%             fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n", x, y, z, theta);
+%             error("TaskSpaceCubicSplineTrajectorySetPoints: No IK solutions found. Time = %d", t);
+
+            failedPoints = failedPoints + 1;
+            continue
         end
         [ik_sol, err] = getFirstValidIKSol(ik_sols);
         if err
-           printWaypoints(waypoints);
-           fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n", x, y, z, theta);
-           error("TaskSpaceCubicSplineTrajectorySetPoints: No valid IK solution found. Time = %d", t);
+%            printWaypoints(waypoints);
+%            fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n", x, y, z, theta);
+%            error("TaskSpaceCubicSplineTrajectorySetPoints: No valid IK solution found. Time = %d", t);
+
+            failedPoints = failedPoints + 1;
+            continue
         end
         
         jointAngles = [jointAngles, ik_sol];

@@ -36,11 +36,11 @@ function plot = jointspace_sim(startX, startY, startZ, startTheta, endX, endY, e
     hold on
 
     for i = 1:length(startX)
-    [thetas1, thetas2, thetas3, thetas4, times] = JointAngleSetPointsStartEndUsingJointSpace(startX(i), startY(i), startZ(i), startTheta(i), endX(i), endY(i), endZ(i), endTheta(i), timeForTrajectory, samplePeriod)
+    [jointAngles, times] = JointAngleSetPointsStartEndUsingJointSpace(startX(i), startY(i), startZ(i), startTheta(i), endX(i), endY(i), endZ(i), endTheta(i), timeForTrajectory, samplePeriod)
         for j = 1:length(times)
             beta = pi/2 - atan(0.024/0.128)
             %base frame
-            T0 = tfFromDH(0.0, 0.0, 0.0, thetas1(j))
+            T0 = tfFromDH(0.0, 0.0, 0.0, jointAngles(j).joint1_angle)
             x_dir0 = T0(1:3,1)*0.01
             y_dir0 = T0(1:3,2)*0.01
             z_dir0 = T0(1:3,3)*0.01
@@ -54,14 +54,14 @@ function plot = jointspace_sim(startX, startY, startZ, startTheta, endX, endY, e
             pos1 = T1(:,4)
 
             %second joint
-            T2 = T1 * tfFromDH(pi/2, 0.0, 0.0, -thetas2(j) + beta)* tfFromDH(0.0, 0.130, 0, -thetas3(j)-beta);
+            T2 = T1 * tfFromDH(pi/2, 0.0, 0.0, -jointAngles(j).joint2_angle + beta)* tfFromDH(0.0, 0.130, 0, -jointAngles(j).joint3_angle-beta);
             x_dir2 = T2(1:3,1)*0.01
             y_dir2 = T2(1:3,2)*0.01
             z_dir2 = T2(1:3,3)*0.01
             pos2 = T2(:,4)
 
             %third joint
-            T3 = T2 * tfFromDH(0, 0.124, 0.0, -thetas4(j))
+            T3 = T2 * tfFromDH(0, 0.124, 0.0, -jointAngles(j).joint4_angle)
             x_dir3 = T3(1:3,1)*0.01
             y_dir3 = T3(1:3,2)*0.01
             z_dir3 = T3(1:3,3)*0.01
