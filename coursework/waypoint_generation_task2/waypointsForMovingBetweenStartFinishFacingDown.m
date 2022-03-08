@@ -32,7 +32,7 @@ function waypoints = waypointsForMovingBetweenStartFinishFacingDown(...
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
-    waypoint.timeForTrajectory = 1.0;
+    waypoint.timeForTrajectory = 0.5;
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPickUpCubeFacingDown);

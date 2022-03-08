@@ -11,5 +11,5 @@ function newWaypoint = modifyWaypointFromTopToSideApproach(waypoint, gripperZCub
     newWaypoint.x = waypoint.x - xOffset;
     newWaypoint.y = waypoint.y - yOffset;
     % Offset to avoid crashing into cube stand (stand has higher sides)
-    newWaypoint.z = gripperZCube + 0.005;
+    newWaypoint.z = gripperZCube + 0.025;
 end

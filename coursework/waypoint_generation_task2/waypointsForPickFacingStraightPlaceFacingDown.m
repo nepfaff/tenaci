@@ -87,7 +87,8 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     end
     waypoints = [
         waypoints,...
-        addCollisionAvoidanceWhileRotatingWaypoint(waypoint, pi/36)
+        addCollisionAvoidanceWhileRotatingWaypoint(waypoint, pi/3)
+%         waypoint
     ];
     
     % Place down cube

@@ -34,6 +34,7 @@ function newWaypoints = insertCubeAvoidanceWaypoints(waypoints, minDistance, joi
             fprintf("insertCubeAvoidanceWaypoints: Failed to insert " +...
                 "waypoint due to no IK solutions; x=%f, y=%f, z=%f, theta=%f\n",...
                 mid.x, mid.y, mid.z, mid.theta);
+            newWaypoints = [newWaypoints, finish];
             continue;
         end
         [ik_sol, err] = getFirstValidIKSol(ik_sols);
@@ -41,6 +42,7 @@ function newWaypoints = insertCubeAvoidanceWaypoints(waypoints, minDistance, joi
             fprintf("insertCubeAvoidanceWaypoints: Failed to insert " +...
                 "waypoint due to no valid IK solutions; x=%f, y=%f, z=%f, theta=%f\n",...
                 mid.x, mid.y, mid.z, mid.theta);
+            newWaypoints = [newWaypoints, finish];
             continue;
         end
         
@@ -60,6 +62,7 @@ function newWaypoints = insertCubeAvoidanceWaypoints(waypoints, minDistance, joi
         % Make this a spline trajectory
         newWaypoint.groupToPrevious = true;
         finish.groupToPrevious = true;
+        finish.timeForTrajectory = 1.0;
         
         newWaypoints = [newWaypoints, newWaypoint, finish];
     end

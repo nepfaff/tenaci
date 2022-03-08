@@ -57,7 +57,7 @@ function [jointAngles, times] = JointSpaceCubicSplineTrajectorySetPoints(...
     times = [];
     currentCubicIdx = 1;
     for t = 0 : samplePeriod : timeForTrajectory
-        if t > xCubics(currentCubicIdx).xmax
+        if t > theta1Cubics(currentCubicIdx).xmax
             currentCubicIdx = currentCubicIdx + 1;
         end
         
