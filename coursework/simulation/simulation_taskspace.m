@@ -1,38 +1,3 @@
-clc;
-clear;
-close all;
-% 
-% 
-% % Define waypoints (must include startPose!)
-waypoint1.x = 0.0;
-waypoint1.y = 0.2;
-waypoint1.z = 0.1;
-waypoint1.theta = -0.523;
-waypoint1.gripper = 0;
-
-waypoint2.x = 0;
-waypoint2.y = 0.2;
-waypoint2.z = 0.2;
-waypoint2.theta =-0.523;
-waypoint2.gripper = 0
-
-waypoint3.x = 0;
-waypoint3.y = 0.1;
-waypoint3.z = 0.2;
-waypoint3.theta = -0.523;
-waypoint3.gripper = 0;
-
-waypoint4.x = 0;
-waypoint4.y = 0.1;
-waypoint4.z = 0.1;
-waypoint4.theta = -0.523;
-waypoint4.gripper = 0;
-% 
-timeForTrajectory = 1
-samplePeriod = 0.1
-% 
-waypoints = [waypoint1, waypoint2, waypoint3, waypoint4]
-% 
 % shape = myplot()
 % shapecon = shape
 % shapecon(:,1) = shapecon(:,1)-125
@@ -49,10 +14,9 @@ waypoints = [waypoint1, waypoint2, waypoint3, waypoint4]
 % %lst = drawArc([0.1,0,0],[0,0,0],pi/2,0.2)
 % 
 % waypoints = generateWaypointsByList(lst,-pi/2,0)
-
-taskspance_sim(waypoints,timeForTrajectory, samplePeriod )
-
-function plot = taskspance_sim(waypoints, timeForTrajectory, samplePeriod)
+function plot = simulation_taskspace(waypoints, timeForTrajectory, samplePeriod)
+    
+    plot = figure
     plot3([0 0], [0 0], [0 0])
     xlabel('X')
     ylabel('Y')
@@ -147,7 +111,7 @@ function plot = taskspance_sim(waypoints, timeForTrajectory, samplePeriod)
             frame4_z = plot3([pos4(1), pos4(1) + z_dir4(1) ], [pos4(2), pos4(2) + z_dir4(2)], [pos4(3), pos4(3)+ z_dir4(3)], 'Color','b','LineWidth',2)
           % mark the end tool position (leave a trace)
             plot3( pos4(1), pos4(2), pos4(3), '.', 'markersize', 8)
-            pause(0.001)
+            pause(0.005)
 
             % Unless the trajactory stop, otherwise keep deleting the old frame
            % and link and plot the new links and frames
