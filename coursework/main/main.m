@@ -312,8 +312,14 @@ for i = 1 : length(stages)
         pause(samplePeriod/2); % Try to send next set point at max velocity
     end
     
-    % Ensure that have time to reach the waypoint before changing the
-    pause(1.5);
+    % Pause until the last waypoint of this stage is reached (all servos
+    % stopped moving)
+    while read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_MOVING) ||...
+            read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_MOVING) ||...
+            read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID3, ADDR_PRO_MOVING) ||...
+            read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_PRO_MOVING)
+        % Do nothing
+    end
 
     % Gripper configuration
     writePosition(DXL_ID5, stages(i).gripperOpening, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
