@@ -58,6 +58,7 @@ function newWaypoints = insertCubeAvoidanceWaypoints(waypoints, minDistance, joi
         newWaypoint.theta = theta;
         newWaypoint.gripper = start.gripper;
         newWaypoint.timeForTrajectory = 0.0;
+        newWaypoint.name = "cube avoidance";
         
         % Make this a spline trajectory
         newWaypoint.groupToPrevious = true;

@@ -19,6 +19,7 @@ startPose.theta = 0.0;
 startPose.gripper = GRIPPER_OPEN_POS;
 startPose.groupToPrevious = false;
 startPose.timeForTrajectory = 0.0;
+startPose.name = "Start pose";
 
 [startLocations, endLocations] = getTask2CubeLocations();
 
@@ -26,12 +27,15 @@ startPose.timeForTrajectory = 0.0;
 line1Start.x = -0.05;
 line1Start.y = 0.2;
 line1Start.z = 0.05;
+line1Start.name = "Line 1 start";
 line1End.x = 0.05;
 line1End.y = 0.2;
 line1End.z = 0.05;
+line1End.name = "Line 1 end";
 line2End.x = 0.10;
 line2End.y = 0.18;
 line2End.z = 0.05;
+line2End.name = "Line 2 end";
 waypoints = [line1Start, line1End, line2End];
 
 % Constant for drawing task
@@ -54,6 +58,7 @@ for i = 1 : length(w)
     w(i).gripper = GRIPPER_CUBE_HOLD_POS;
     w(i).groupToPrevious = (i ~= 1);
     w(i).timeForTrajectory = 2.0;
+    w(i).name = "arc";
     waypoints = [waypoints, w(i)];
 end
 

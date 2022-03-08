@@ -18,6 +18,7 @@ startPose.theta = 0.0;
 startPose.gripper = GRIPPER_OPEN_POS;
 startPose.groupToPrevious = false;
 startPose.timeForTrajectory = 0.0;
+startPose.name = "Start pose";
 
 [startLocations, endLocations] = getTask2CubeLocations();
 

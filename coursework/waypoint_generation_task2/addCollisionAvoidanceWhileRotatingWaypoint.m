@@ -37,6 +37,7 @@ function newWaypoints = addCollisionAvoidanceWhileRotatingWaypoint(...
     newWaypoint.theta = theta;
     newWaypoint.gripper = waypoint.gripper;
     newWaypoint.timeForTrajectory = 0.5;
+    newWaypoint.name = "collision avoidance while rotating";
 
     % Make this a spline trajectory
     newWaypoint.groupToPrevious = false;
