@@ -49,7 +49,7 @@ waypoints = waypointsForTask2a(...
 waypoints = [startPose, waypoints];
 
 % Slow down simulation by a constant time
-additionalTimePerTrajectory = 1.0;
+additionalTimePerTrajectory = 0.0;
 temp = num2cell([waypoints.timeForTrajectory] + additionalTimePerTrajectory);
 [waypoints.timeForTrajectory] = temp{:};
 

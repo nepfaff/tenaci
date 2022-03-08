@@ -7,7 +7,7 @@ function [jointAngles, times] = JointSpaceCubicSplineTrajectorySetPoints(...
         error("JointSpaceCubicSplineTrajectorySetPoints: Need a minimum of " +...
             "2 waypoints for spline interpolation");
     end
-
+    
     timeBetweenWaypoints = timeForTrajectory / (length(waypoints)-1);
     
     % Construct (value, time) points
