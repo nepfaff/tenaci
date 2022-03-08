@@ -163,7 +163,8 @@ startPose.x = 0.0;
 startPose.y = 0.274;
 startPose.z = 0.2048;
 startPose.theta = 0.0; 
-startPose.gripper = GRIPPER_PEN_CUBE_HOLD_POS;
+%startPose.gripper = GRIPPER_PEN_CUBE_HOLD_POS;
+startPose.gripper = GRIPPER_OPEN_POS;
 startPose.groupToPrevious = false;
 startPose.timeForTrajectory = 0.0;
 
