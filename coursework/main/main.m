@@ -44,7 +44,7 @@ DXL_ID3                      = 13;
 DXL_ID4                      = 14;
 DXL_ID5                      = 15;
 BAUDRATE                    = 1000000;
-DEVICENAME                  = 'COM6';       % Check which port is being used on your controller
+DEVICENAME                  = 'COM7';       % Check which port is being used on your controller
                                             % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
 % Link lengths in cm
 LINK_LENGTH_1 = 8;
@@ -63,7 +63,7 @@ DXL_MOVING_STATUS_THRESHOLD = 20;           % Dynamixel moving status threshold
 GRIPPER_OPEN_POS = 1800;
 GRIPPER_CLOSED_POS = 2647;
 GRIPPER_CUBE_HOLD_POS = 2450;
-GRIPPER_PEN_CUBE_HOLD_POS = 2250;
+GRIPPER_PEN_CUBE_HOLD_POS = 2350;%2250;
 
 % get Z locations from the config folder
 [GRIPPER_Z_PICK_UP_CUBE_FACING_DOWN, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_DOWN,...
@@ -163,7 +163,7 @@ startPose.x = 0.0;
 startPose.y = 0.274;
 startPose.z = 0.2048;
 startPose.theta = 0.0; 
-%startPose.gripper = GRIPPER_PEN_CUBE_HOLD_POS;
+% startPose.gripper = GRIPPER_PEN_CUBE_HOLD_POS;
 startPose.gripper = GRIPPER_OPEN_POS;
 startPose.groupToPrevious = false;
 startPose.timeForTrajectory = 0.0;
@@ -174,20 +174,22 @@ startPose.name = "Start pose";
 % Official task 2 cube locations
 [startLocations, endLocations] = getTask2CubeLocations();
 
-waypoints = waypointsForTask2a(...
-    startLocations, endLocations,...
-    GRIPPER_Z_PICK_UP_CUBE_FACING_DOWN, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_DOWN,...
-    GRIPPER_Z_PICK_UP_CUBE_FACING_STRAIGHT, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_STRAIGHT,...
-    GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
-);
+% Task specific waypoints
 
-% waypoints = waypointsForTask2b(...
-%     startLocations,...
+% waypoints = waypointsForTask2a(...
+%     startLocations, endLocations,...
 %     GRIPPER_Z_PICK_UP_CUBE_FACING_DOWN, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_DOWN,...
 %     GRIPPER_Z_PICK_UP_CUBE_FACING_STRAIGHT, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_STRAIGHT,...
-%     GRIPPER_PICK_DOWN_OFFSET,...
 %     GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
 % );
+
+waypoints = waypointsForTask2b(...
+    startLocations,...
+    GRIPPER_Z_PICK_UP_CUBE_FACING_DOWN, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_DOWN,...
+    GRIPPER_Z_PICK_UP_CUBE_FACING_STRAIGHT, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_STRAIGHT,...
+    GRIPPER_PICK_DOWN_OFFSET,...
+    GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
+);
 
 % waypoints = waypointsForTask2c(...
 %     startLocations, endLocations,...
@@ -195,6 +197,10 @@ waypoints = waypointsForTask2a(...
 %     GRIPPER_Z_PICK_UP_CUBE_FACING_STRAIGHT, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_STRAIGHT,...
 %     GRIPPER_PICK_DOWN_OFFSET,...
 %     GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
+% );
+
+% waypoints = getTask3VideoWaypoints(...
+%     GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
 % );
 
 
@@ -216,7 +222,7 @@ stages = taskSpaceStagesFromWaypoints(...
 % Set velocity and acceleration
 % In time-based mode, velocity represents the total time in milliseconds
 % for the trajectory and acceleration represents the acceleration time in milliseconds
-vel = samplePeriod * 1000; % Range [0,32767] where units are in milliseconds for time-based profile
+vel = samplePeriod * 1000 * 2; % Range [0,32767] where units are in milliseconds for time-based profile
 writeVelocity(DXL_ID1, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
 writeVelocity(DXL_ID2, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
 writeVelocity(DXL_ID3, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
@@ -252,39 +258,6 @@ writePosition(DXL_ID5, startPose.gripper, port_num, PROTOCOL_VERSION, COMM_SUCCE
 
 disp("Press any keay to start the main task sequence!");
 pause;
-
-% Optional FK printing loop
-while false
-    % Read all encoder positions
-    pos1 = getPosition(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-    pos2 = getPosition(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-    pos3 = getPosition(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-    pos4 = getPosition(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-    pos5 = getPosition(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID1, pos1);
-%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID2, pos2);
-%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID3, pos3);
-%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID4, pos4);
-%     fprintf('[ID:%03d] Position: %03d\n', DXL_ID5, pos5);
-%     
-%     % Convert all encoder positions into radians
-    joint1_angle = encoderToRadians(pos1);
-    joint2_angle = encoderToRadians(pos2);
-    joint3_angle = encoderToRadians(pos3);
-    joint4_angle = encoderToRadians(pos4);
-    gripper_angle = encoderToRadians(pos5);
-%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID1, joint1_angle);
-%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID2, joint2_angle);
-%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID3, joint3_angle);
-%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID4, joint4_angle);
-%     fprintf('[ID:%03d] Position (rad): %03d\n', DXL_ID5, gripper_angle);
-    
-    % Get tool position
-    [tool_x, tool_y, tool_z, tool_theta] = OpenManipFK(...
-        joint1_angle, joint2_angle, joint3_angle, joint4_angle);
-    fprintf("tool_x: %f, tool_y: %f, tool_z: %f, tool_theta: %f",...
-        tool_x, tool_y, tool_z, tool_theta);
-end
 
 % Main stage sequence
 currentGripper = startPose.gripper;
@@ -322,10 +295,10 @@ for i = 1 : length(stages)
     
     % Pause until the last waypoint of this stage is reached (all servos
     % stopped moving)
-    while read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_MOVING) ||...
-            read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_MOVING) ||...
-            read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID3, ADDR_PRO_MOVING) ||...
-            read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_PRO_MOVING)
+    while read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_MOVING) ||...
+            read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_MOVING) ||...
+            read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID3, ADDR_PRO_MOVING) ||...
+            read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_PRO_MOVING)
         % Do nothing
     end
 
@@ -337,17 +310,17 @@ end
 fprintf("Moving to finish pose\n");
 
 % Convert joint angles into encoder values
-pos1 = radiansToEncoder(0.0); % TODO: Determine correct joint angles for this
-pos2 = radiansToEncoder(0.0);
-pos3 = radiansToEncoder(0.0);
-pos4 = radiansToEncoder(0.0);
+pos1 = radiansToEncoder(-0.0445); % TODO: Determine correct joint angles for this
+pos2 = radiansToEncoder(-2.0417);
+pos3 = radiansToEncoder(1.5417);
+pos4 = radiansToEncoder(-pi/2);
 
 % Move to start position without specific trajectory
 writePosition(DXL_ID1, pos1, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
 writePosition(DXL_ID2, pos2, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
 writePosition(DXL_ID3, pos3, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
 writePosition(DXL_ID4, pos4, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
-
+pause(2);
 
 % Disable Dynamixel Torque
 disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
