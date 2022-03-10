@@ -39,7 +39,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
-    waypoint.timeForTrajectory = 1.0;
+    waypoint.timeForTrajectory = 0.5;
     waypoint.name = "above start";
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
@@ -54,7 +54,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
     waypoint.groupToPrevious = false;
-    waypoint.timeForTrajectory = 0.5;
+    waypoint.timeForTrajectory = 0.25;
     waypoint.name = "grab cube facing down";
     waypoints = [waypoints, waypoint];
     
@@ -65,7 +65,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.theta = -pi/2;
     waypoint.gripper = gripperCubeHoldPos;
     waypoint.groupToPrevious = false; % TODO: try true
-    waypoint.timeForTrajectory = 0.5;
+    waypoint.timeForTrajectory = 0.25;
     waypoint.name = "above start";
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
@@ -99,7 +99,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.theta = 0.0;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
-    waypoint.timeForTrajectory = 0.5;
+    waypoint.timeForTrajectory = 0.25;
     waypoint.name = "place down facing straight";
     [xOffset, yOffset] = computeXYOffset(gripperPickDownOffset, waypoint);
     waypoint.x = waypoint.x - xOffset;
@@ -113,7 +113,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.theta = 0.0;
     waypoint.gripper = gripperOpenPos;
     waypoint.groupToPrevious = false;
-    waypoint.timeForTrajectory = 0.5;
+    waypoint.timeForTrajectory = 0.25;
     waypoint.name = "above end";
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
