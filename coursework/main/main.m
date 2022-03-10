@@ -333,6 +333,22 @@ for i = 1 : length(stages)
     writePosition(DXL_ID5, stages(i).gripperOpening, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
 end
 
+% Move to finish pose
+fprintf("Moving to finish pose\n");
+
+% Convert joint angles into encoder values
+pos1 = radiansToEncoder(0.0); % TODO: Determine correct joint angles for this
+pos2 = radiansToEncoder(0.0);
+pos3 = radiansToEncoder(0.0);
+pos4 = radiansToEncoder(0.0);
+
+% Move to start position without specific trajectory
+writePosition(DXL_ID1, pos1, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+writePosition(DXL_ID2, pos2, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+writePosition(DXL_ID3, pos3, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+writePosition(DXL_ID4, pos4, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+
+
 % Disable Dynamixel Torque
 disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
 disableDynamixelTorque(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
