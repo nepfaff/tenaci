@@ -3,7 +3,7 @@ clear;
 
 % Values to send to the gripper
 GRIPPER_OPEN_POS = 1800;
-GRIPPER_PEN_CUBE_HOLD_POS = 2250;
+GRIPPER_PEN_CUBE_HOLD_POS = 2350;
 
 % Start pose of gripper
 startPose.x = 0.0;
