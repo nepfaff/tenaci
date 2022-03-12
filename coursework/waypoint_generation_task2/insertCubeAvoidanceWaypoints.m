@@ -63,7 +63,7 @@ function newWaypoints = insertCubeAvoidanceWaypoints(waypoints, minDistance, joi
         % Make this a spline trajectory
         newWaypoint.groupToPrevious = true;
         finish.groupToPrevious = true;
-        finish.timeForTrajectory = 1.0;
+        finish.timeForTrajectory = 0.75;
         
         newWaypoints = [newWaypoints, newWaypoint, finish];
     end
