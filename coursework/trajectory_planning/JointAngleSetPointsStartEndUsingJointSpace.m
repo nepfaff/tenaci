@@ -6,10 +6,15 @@ function [jointAngles, times] = JointAngleSetPointsStartEndUsingJointSpace(...
     % IK to get start and end pose in joint space
     startIKSols = OpenManipIK(startX, startY, startZ, startTheta);
     endIKSols = OpenManipIK(endX, endY, endZ, endTheta);
-    startIKSol = getFirstValidIKSol(startIKSols);
+    [startIKSol, err] = getFirstValidIKSol(startIKSols);
+    if err
+       fprintf("Start target = X: %f, Y: %f, Z: %f, Th: %f\n",...
+            startX, startY, startZ, startTheta);
+       error("JointAngleSetPointsStartEndUsingJointSpace: No valid IK solution found\n");
+    end
     [endIKSol, err] = getFirstValidIKSol(endIKSols);
     if err
-       fprintf("Target = X: %f, Y: %f, Z: %f, Th: %f\n",...
+       fprintf("End target = X: %f, Y: %f, Z: %f, Th: %f\n",...
             endX, endY, endZ, endTheta);
        error("JointAngleSetPointsStartEndUsingJointSpace: No valid IK solution found\n");
     end

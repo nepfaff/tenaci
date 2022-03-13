@@ -77,5 +77,5 @@ function waypoints = waypointsForTask2b(...
         end
     end
     
-    waypoints = insertCubeAvoidanceWaypoints(waypoints, 0.1, pi/6);
+%     waypoints = insertCubeAvoidanceWaypoints(waypoints, 0.1, pi/6);
 end

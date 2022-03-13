@@ -106,5 +106,5 @@ function waypoints = waypointsForTask2c(...
             nextGripperZAbovePlacedCubeFacingStraight + (gripperZPickUpCubeFacingStraight - cubeStandHeight);
     end
     
-    waypoints = insertCubeAvoidanceWaypoints(waypoints, 0.1, pi/12);
+%     waypoints = insertCubeAvoidanceWaypoints(waypoints, 0.1, pi/12);
 end

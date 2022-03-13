@@ -44,7 +44,7 @@ DXL_ID3                      = 13;
 DXL_ID4                      = 14;
 DXL_ID5                      = 15;
 BAUDRATE                    = 115200;
-DEVICENAME                  = 'COM8';       % Check which port is being used on your controller
+DEVICENAME                  = 'COM7';       % Check which port is being used on your controller
                                             % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
 % Link lengths in cm
 LINK_LENGTH_1 = 8;
@@ -178,7 +178,7 @@ startPose.name = "Start pose";
 
 % waypoints = load(".\config\waypoints_task2a_video.mat").waypoints;
 % waypoints = load(".\config\waypoints_task2b_video.mat").waypoints;
-% waypoints = load(".\config\waypoints_task2c_video.mat").waypoints;
+waypoints = load(".\config\waypoints_task2c_video.mat").waypoints;
 
 % waypoints = waypointsForTask2a(...
 %     startLocations, endLocations,...
@@ -203,9 +203,9 @@ startPose.name = "Start pose";
 %     GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
 % );
 
-waypoints = getTask3VideoWaypoints(...
-    GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
-);
+% waypoints = getTask3VideoWaypoints(...
+%     GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
+% );
 
 
 % Waypoints must include the gripper's starting pose
@@ -245,9 +245,9 @@ writeAcceleration(DXL_ID4, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_P
 
 % Calibration
 joint1_offset = 0.0;
-joint2_offset = -0.05;
-joint3_offset = 0.0;
-joint4_offset = 0.0;
+joint2_offset = -0.06;
+joint3_offset = -0.05;
+joint4_offset = -0.03;
 
 % Move to start pose
 fprintf("Moving to start pose\n");
@@ -282,18 +282,18 @@ for i = 1 : length(stages)
     % Send set points to robot
     for j = 1 : length(jointAngles)
         % Optionally print tool pose
-        pos1 = getPosition(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-        pos2 = getPosition(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-        pos3 = getPosition(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-        pos4 = getPosition(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
-        joint1_angle = encoderToRadians(pos1);
-        joint2_angle = encoderToRadians(pos2);
-        joint3_angle = encoderToRadians(pos3);
-        joint4_angle = encoderToRadians(pos4);
-        [tool_x, tool_y, tool_z, tool_theta] = OpenManipFK(...
-        joint1_angle, joint2_angle, joint3_angle, joint4_angle);
-        fprintf("stage: %f, tool_x: %f, tool_y: %f, tool_z: %f, tool_theta: %f\n",...
-            i, tool_x, tool_y, tool_z, tool_theta);
+%         pos1 = getPosition(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+%         pos2 = getPosition(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+%         pos3 = getPosition(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+%         pos4 = getPosition(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+%         joint1_angle = encoderToRadians(pos1);
+%         joint2_angle = encoderToRadians(pos2);
+%         joint3_angle = encoderToRadians(pos3);
+%         joint4_angle = encoderToRadians(pos4);
+%         [tool_x, tool_y, tool_z, tool_theta] = OpenManipFK(...
+%         joint1_angle, joint2_angle, joint3_angle, joint4_angle);
+%         fprintf("stage: %f, tool_x: %f, tool_y: %f, tool_z: %f, tool_theta: %f\n",...
+%             i, tool_x, tool_y, tool_z, tool_theta);
         
         pos1 = radiansToEncoder(jointAngles(j).joint1_angle+joint1_offset);
         pos2 = radiansToEncoder(jointAngles(j).joint2_angle+joint2_offset);
@@ -319,6 +319,10 @@ for i = 1 : length(stages)
 
     % Gripper configuration
     writePosition(DXL_ID5, stages(i).gripperOpening, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
+
+    while read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID5, ADDR_PRO_MOVING)
+        % Do nothing
+    end
 end
 
 % Move to finish pose
