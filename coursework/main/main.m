@@ -43,7 +43,7 @@ DXL_ID2                      = 12;  % TODO: Add correct IDs
 DXL_ID3                      = 13;
 DXL_ID4                      = 14;
 DXL_ID5                      = 15;
-BAUDRATE                    = 115200;
+BAUDRATE                    = 1000000;%115200;
 DEVICENAME                  = 'COM7';       % Check which port is being used on your controller
                                             % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
 % Link lengths in cm
@@ -224,25 +224,6 @@ stages = taskSpaceStagesFromWaypoints(...
     waypoints, samplePeriod...
 );
 
-% Set velocity and acceleration
-% In time-based mode, velocity represents the total time in milliseconds
-% for the trajectory and acceleration represents the acceleration time in milliseconds
-% Vel should be (samplePeriod * 1000 * 2) by default and (samplePeriod * 1000
-% * 4 for drawing)
-vel = samplePeriod * 1000 * 2; % Range [0,32767] where units are in milliseconds for time-based profile
-writeVelocity(DXL_ID1, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
-writeVelocity(DXL_ID2, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
-writeVelocity(DXL_ID3, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
-writeVelocity(DXL_ID4, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
-
-% acc should be (samplePeriod * 250) by default and (samplePeriod * 250 *
-% 2) for drawing
-acc = samplePeriod * 250; % Range [0,32767] where units are in milliseconds for time-based profile
-writeAcceleration(DXL_ID1, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
-writeAcceleration(DXL_ID2, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
-writeAcceleration(DXL_ID3, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
-writeAcceleration(DXL_ID4, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
-
 % Calibration
 joint1_offset = 0.0;
 joint2_offset = -0.06;
@@ -263,6 +244,18 @@ pos3 = radiansToEncoder(startIKSol.joint3_angle+joint3_offset);
 pos4 = radiansToEncoder(startIKSol.joint4_angle+joint4_offset);
 
 % Move to start position without specific trajectory
+vel = 1000; % Range [0,32767] where units are in milliseconds for time-based profile
+writeVelocity(DXL_ID1, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+writeVelocity(DXL_ID2, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+writeVelocity(DXL_ID3, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+writeVelocity(DXL_ID4, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+
+acc = 300; % Range [0,32767] where units are in milliseconds for time-based profile
+writeAcceleration(DXL_ID1, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
+writeAcceleration(DXL_ID2, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
+writeAcceleration(DXL_ID3, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
+writeAcceleration(DXL_ID4, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
+
 writePosition(DXL_ID1, pos1, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
 writePosition(DXL_ID2, pos2, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
 writePosition(DXL_ID3, pos3, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
@@ -273,6 +266,25 @@ writePosition(DXL_ID5, startPose.gripper, port_num, PROTOCOL_VERSION, COMM_SUCCE
 
 disp("Press any keay to start the main task sequence!");
 pause;
+
+% Set velocity and acceleration
+% In time-based mode, velocity represents the total time in milliseconds
+% for the trajectory and acceleration represents the acceleration time in milliseconds
+% Vel should be (samplePeriod * 1000 * 2) by default and (samplePeriod * 1000
+% * 4 for drawing)
+vel = samplePeriod * 1000 * 2; % Range [0,32767] where units are in milliseconds for time-based profile
+writeVelocity(DXL_ID1, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+writeVelocity(DXL_ID2, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+writeVelocity(DXL_ID3, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+writeVelocity(DXL_ID4, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+
+% acc should be (samplePeriod * 250) by default and (samplePeriod * 250 *
+% 2) for drawing
+acc = samplePeriod * 250; % Range [0,32767] where units are in milliseconds for time-based profile
+writeAcceleration(DXL_ID1, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
+writeAcceleration(DXL_ID2, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
+writeAcceleration(DXL_ID3, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
+writeAcceleration(DXL_ID4, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
 
 % Main stage sequence
 currentGripper = startPose.gripper;
@@ -334,7 +346,19 @@ pos2 = radiansToEncoder(-2.0417);
 pos3 = radiansToEncoder(1.5417);
 pos4 = radiansToEncoder(-pi/2);
 
-% Move to start position without specific trajectory
+% Move to end position without specific trajectory
+vel = 1000; % Range [0,32767] where units are in milliseconds for time-based profile
+writeVelocity(DXL_ID1, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+writeVelocity(DXL_ID2, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+writeVelocity(DXL_ID3, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+writeVelocity(DXL_ID4, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
+
+acc = 300; % Range [0,32767] where units are in milliseconds for time-based profile
+writeAcceleration(DXL_ID1, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
+writeAcceleration(DXL_ID2, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
+writeAcceleration(DXL_ID3, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
+writeAcceleration(DXL_ID4, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
+
 writePosition(DXL_ID1, pos1, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
 writePosition(DXL_ID2, pos2, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
 writePosition(DXL_ID3, pos3, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_GOAL_POSITION);
