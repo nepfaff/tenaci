@@ -158,6 +158,22 @@ enableDynamixelTorque(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABL
 enableDynamixelTorque(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
 enableDynamixelTorque(DXL_ID5, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, COMM_SUCCESS)
 
+while (false)
+    pos1 = getPosition(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos2 = getPosition(DXL_ID2, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos3 = getPosition(DXL_ID3, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    pos4 = getPosition(DXL_ID4, port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, COMM_SUCCESS);
+    joint1_angle = encoderToRadians(pos1);
+    joint2_angle = encoderToRadians(pos2);
+    joint3_angle = encoderToRadians(pos3);
+    joint4_angle = encoderToRadians(pos4);
+    [tool_x, tool_y, tool_z, tool_theta] = OpenManipFK(...
+    joint1_angle, joint2_angle, joint3_angle, joint4_angle);
+    fprintf("stage: %f, tool_x: %f, tool_y: %f, tool_z: %f, tool_theta: %f\n",...
+        i, tool_x, tool_y, tool_z, tool_theta); 
+%     fprintf("---------------------------------------------------------------");
+end
+
 % Define start pose
 startPose.x = 0.0;
 startPose.y = 0.274;
@@ -178,7 +194,7 @@ startPose.name = "Start pose";
 
 % waypoints = load(".\config\waypoints_task2a_video.mat").waypoints;
 % waypoints = load(".\config\waypoints_task2b_video.mat").waypoints;
-waypoints = load(".\config\waypoints_task2c_video.mat").waypoints;
+% waypoints = load(".\config\waypoints_task2c_video.mat").waypoints;
 
 % waypoints = waypointsForTask2a(...
 %     startLocations, endLocations,...
@@ -206,6 +222,8 @@ waypoints = load(".\config\waypoints_task2c_video.mat").waypoints;
 % waypoints = getTask3VideoWaypoints(...
 %     GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
 % );
+
+waypoints = load(".\config\waypoints_task4_without_writing.mat").waypoints;
 
 
 % Waypoints must include the gripper's starting pose
