@@ -19,8 +19,8 @@ function [jointAngles, times] = JointSpaceCubicSplineTrajectorySetPoints(...
     for i = 1 : length(waypoints)
         ik_sols = OpenManipIK(waypoints(i).x, waypoints(i).y, waypoints(i).z, waypoints(i).theta);
         if isempty(ik_sols)
-            fprintf("Waypoint = X: %f, Y: %f, Z: %f, Th: %f\n",...
-                waypoints(i).x, waypoints(i).y, waypoints(i).z, waypoints(i).theta);
+            fprintf("Waypoint = X: %f, Y: %f, Z: %f, Th: %f, Name: %s\n",...
+                waypoints(i).x, waypoints(i).y, waypoints(i).z, waypoints(i).theta, waypoint(i).name);
             error("JointSpaceCubicSplineTrajectorySetPoints: No IK solutions found. Time = %d", t);
         end
         [ik_sol, err] = getFirstValidIKSol(ik_sols);
