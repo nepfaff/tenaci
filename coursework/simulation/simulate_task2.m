@@ -55,7 +55,10 @@ startPose.name = "Start pose";
 % );
 
 % Task 4 (exluding writing part)
-waypoints = load(".\config\waypoints_task4_without_writing.mat").waypoints;
+% waypoints = load(".\config\waypoints_task4_without_writing.mat").waypoints;
+waypoints = task4_drawing_waypoints(...
+    GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
+);
 
 waypoints = [startPose, waypoints];
 

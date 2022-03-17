@@ -22,7 +22,7 @@ function waypoints = task4_drawing_waypoints(...
     penPickUp.theta = -pi/2;
     penPickUp.gripper = gripperPenCubeHoldPos;
     penPickUp.groupToPrevious = false;
-    penPickUp.timeForTrajectory = 0.15;
+    penPickUp.timeForTrajectory = 0.1;
     penPickUp.name = "Pen pick up";
     
     penAbovePickUp1.x = 0.125;
@@ -38,12 +38,9 @@ function waypoints = task4_drawing_waypoints(...
 
     
     % Drawing Letter E
-    E_line1Above.x = 0.18    ;
+    E_line1Above.x = 0.18;
     E_line1Above.y = 0.155;
     E_line1Above.z = drawingHeight + 0.02;
-    E_line1Above.theta = 0.0;
-    E_line1Above.gripper = gripperPenCubeHoldPos;
-    E_line1Above.groupToPrevious = false;
     E_line1Above.timeForTrajectory = 0.3;
     E_line1Above.name = "Above E start";
 
@@ -55,28 +52,30 @@ function waypoints = task4_drawing_waypoints(...
     E_line1End.x = 0.2;
     E_line1End.y = 0.155;
     E_line1End.z = drawingHeight;
-    E_line1End.timeForTrajectory = 0.35;
+    E_line1End.timeForTrajectory = 0.5;
     E_line1End.name = "Horizontal line end";
     E_line2End.x = 0.2;
     E_line2End.y = 0.195;
     E_line2End.z = drawingHeight;
-    E_line2End.timeForTrajectory = 0.3;
+    E_line2End.timeForTrajectory = 0.8;
     E_line2End.name = "Vertical line end";
     E_line3End.x = 0.18;
     E_line3End.y = 0.195;
     E_line3End.z = drawingHeight;
-    E_line3End.timeForTrajectory = 0.3;
+    E_line3End.timeForTrajectory = 0.5;
     E_line3End.name = "Horizontal line end";
+    E_line3AboveEnd.x = 0.18;
+    E_line3AboveEnd.y = 0.195;
+    E_line3AboveEnd.z = drawingHeight + 0.02;
+    E_line3AboveEnd.timeForTrajectory = 0.2;
+    E_line3AboveEnd.name = "Horizontal line end above";
 
     E_line4Above.x = 0.2;
     E_line4Above.y = 0.175;
     E_line4Above.z = drawingHeight + 0.02;
-    E_line4Above.theta = 0.0;
-    E_line4Above.gripper = gripperPenCubeHoldPos;
-    E_line4Above.groupToPrevious = false;
     E_line4Above.timeForTrajectory = 0.3;
     E_line4Above.name = "Above line 4 start";
-    E_line4Start.x = 0.1;
+    E_line4Start.x = 0.2;
     E_line4Start.y = 0.175;
     E_line4Start.z = drawingHeight;
     E_line4Start.timeForTrajectory = 0.1;
@@ -86,9 +85,15 @@ function waypoints = task4_drawing_waypoints(...
     E_line4End.z = drawingHeight;
     E_line4End.timeForTrajectory = 0.35;
     E_line4End.name = "Horizontal end";
+    E_line4EndAbove.x = 0.18;
+    E_line4EndAbove.y = 0.175;
+    E_line4EndAbove.z = drawingHeight + 0.02;
+    E_line4EndAbove.timeForTrajectory = 0.35;
+    E_line4EndAbove.name = "Horizontal end";
     
     E_lineWaypoints = [E_line1Above, E_line1Start, E_line1End, E_line2End, E_line3End, ...
-                       E_line4Above,E_line4Start, E_line4End ];
+                       E_line3AboveEnd, E_line4Above,E_line4Start, E_line4End, ...
+                       E_line4EndAbove];
 
     % Constant for lines
     for i = 1 : length(E_lineWaypoints)
@@ -103,7 +108,7 @@ function waypoints = task4_drawing_waypoints(...
     % Combine waypoints
     waypoints = [
        pickUpWaypoints,...
-       E_lineWypoints
+       E_lineWaypoints
     ];
 
 

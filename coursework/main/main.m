@@ -223,7 +223,10 @@ startPose.name = "Start pose";
 %     GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
 % );
 
-waypoints = load(".\config\waypoints_task4_without_writing.mat").waypoints;
+% waypoints = load(".\config\waypoints_task4_without_writing.mat").waypoints;
+waypoints = task4_drawing_waypoints(...
+    GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
+);
 
 
 % Waypoints must include the gripper's starting pose
