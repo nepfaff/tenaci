@@ -44,7 +44,7 @@ DXL_ID3                      = 13;
 DXL_ID4                      = 14;
 DXL_ID5                      = 15;
 BAUDRATE                    = 115200;%1000000;
-DEVICENAME                  = 'COM3';       % Check which port is being used on your controller
+DEVICENAME                  = 'COM6';       % Check which port is being used on your controller
                                             % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
 % Link lengths in cm
 LINK_LENGTH_1 = 8;
@@ -60,7 +60,7 @@ DXL_MAXIMUM_POSITION_VALUE  = 150000;       % and this value (note that the Dyna
 DXL_MOVING_STATUS_THRESHOLD = 20;           % Dynamixel moving status threshold
 
 % Values to send to the gripper
-GRIPPER_OPEN_POS = 1800;
+GRIPPER_OPEN_POS = 1700;
 GRIPPER_CLOSED_POS = 2647;
 GRIPPER_CUBE_HOLD_POS = 2450;
 GRIPPER_PEN_CUBE_HOLD_POS = 2350;%2250;
@@ -223,10 +223,9 @@ startPose.name = "Start pose";
 %     GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
 % );
 
-waypoints = load(".\config\waypoints_task4_without_writing.mat").waypoints;
-% waypoints = task4_drawing_waypoints(...
-%     GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
-% );
+waypoints = getTask4Waypoints(...
+    GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
+);
 
 
 % Waypoints must include the gripper's starting pose
@@ -252,9 +251,14 @@ stages = taskSpaceStagesFromWaypoints(...
 % joint3_offset = -0.05;
 % joint4_offset = -0.03;
 % Robot 07
+% joint1_offset = 0.0;
+% joint2_offset = 0.02;
+% joint3_offset = 0.0;
+% joint4_offset = 0.0;
+% Robot 03
 joint1_offset = 0.0;
-joint2_offset = 0.02;
-joint3_offset = 0.0;
+joint2_offset = -0.01;
+joint3_offset = -0.02;
 joint4_offset = 0.0;
 
 % Move to start pose

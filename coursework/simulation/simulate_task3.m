@@ -15,10 +15,17 @@ startPose.groupToPrevious = false;
 startPose.timeForTrajectory = 0.0;
 startPose.name = "Start pose";
 
-task3Waypoints = getTask3VideoWaypoints(...
+% waypoints = getTask3VideoWaypoints(...
+%     GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
+% );
+
+% Task 4 (exluding writing part)
+% waypoints = load(".\config\waypoints_task4_without_writing.mat").waypoints;
+waypoints = getTask4DrawingWaypoints(...
     GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
 );
-waypoints = [startPose, task3Waypoints];
+
+waypoints = [startPose, waypoints];
 
 % Using a sample period of 0.1 causes overshoot when drawing the arc
 samplePeriod = 0.05; % In seconds
