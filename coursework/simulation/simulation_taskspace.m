@@ -24,7 +24,7 @@ function plot = simulation_taskspace(waypoints, timeForTrajectory, samplePeriod)
     xlim([-0.21, 0.21])
     ylim([-0.21, 0.21])
     zlim([0 0.42])
-    title("Forward Kinematics")
+    title("Inverse Kinematics (Square plotting)")
     grid on
     hold on
 
@@ -111,7 +111,7 @@ function plot = simulation_taskspace(waypoints, timeForTrajectory, samplePeriod)
             frame4_z = plot3([pos4(1), pos4(1) + z_dir4(1) ], [pos4(2), pos4(2) + z_dir4(2)], [pos4(3), pos4(3)+ z_dir4(3)], 'Color','b','LineWidth',2)
           % mark the end tool position (leave a trace)
             plot3( pos4(1), pos4(2), pos4(3), '.', 'markersize', 8)
-            pause(0.005)
+            pause(0.008)
 
             % Unless the trajactory stop, otherwise keep deleting the old frame
            % and link and plot the new links and frames
