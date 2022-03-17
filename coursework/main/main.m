@@ -240,7 +240,7 @@ temp = num2cell([waypoints.timeForTrajectory] + additionalTimePerTrajectory);
 
 % Convert waypoints into stages (sequences of set points) using trajectory planning
 % samplePeriod should be 0.1 by default and 0.05 for drawing tasks
-samplePeriod = 0.1; % In seconds
+samplePeriod = 0.05; % In seconds
 stages = taskSpaceStagesFromWaypoints(...
     waypoints, samplePeriod...
 );
@@ -299,7 +299,7 @@ pause;
 % for the trajectory and acceleration represents the acceleration time in milliseconds
 % Vel should be (samplePeriod * 1000 * 2) by default and (samplePeriod * 1000
 % * 4 for drawing)
-vel = samplePeriod * 1000 * 2; % Range [0,32767] where units are in milliseconds for time-based profile
+vel = samplePeriod * 1000 * 5; % Range [0,32767] where units are in milliseconds for time-based profile
 writeVelocity(DXL_ID1, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
 writeVelocity(DXL_ID2, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
 writeVelocity(DXL_ID3, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
@@ -307,7 +307,7 @@ writeVelocity(DXL_ID4, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_P
 
 % acc should be (samplePeriod * 250) by default and (samplePeriod * 250 *
 % 2) for drawing
-acc = samplePeriod * 250; % Range [0,32767] where units are in milliseconds for time-based profile
+acc = samplePeriod * 250 * 2; % Range [0,32767] where units are in milliseconds for time-based profile
 writeAcceleration(DXL_ID1, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
 writeAcceleration(DXL_ID2, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
 writeAcceleration(DXL_ID3, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
