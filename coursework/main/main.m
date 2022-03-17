@@ -43,8 +43,8 @@ DXL_ID2                      = 12;  % TODO: Add correct IDs
 DXL_ID3                      = 13;
 DXL_ID4                      = 14;
 DXL_ID5                      = 15;
-BAUDRATE                    = 1000000;%115200;
-DEVICENAME                  = 'COM7';       % Check which port is being used on your controller
+BAUDRATE                    = 115200;%1000000;
+DEVICENAME                  = 'COM3';       % Check which port is being used on your controller
                                             % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
 % Link lengths in cm
 LINK_LENGTH_1 = 8;
@@ -243,10 +243,16 @@ stages = taskSpaceStagesFromWaypoints(...
 );
 
 % Calibration
+% Robot 01
+% joint1_offset = 0.0;
+% joint2_offset = -0.06;
+% joint3_offset = -0.05;
+% joint4_offset = -0.03;
+% Robot 07
 joint1_offset = 0.0;
-joint2_offset = -0.06;
-joint3_offset = -0.05;
-joint4_offset = -0.03;
+joint2_offset = 0.02;
+joint3_offset = 0.0;
+joint4_offset = 0.0;
 
 % Move to start pose
 fprintf("Moving to start pose\n");
