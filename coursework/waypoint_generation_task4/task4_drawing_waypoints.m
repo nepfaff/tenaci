@@ -144,8 +144,7 @@ function waypoints = task4_drawing_waypoints(...
     % Combine waypoints
     waypoints = [
        pickUpWaypoints,...
-       E_lineWaypoints,...
-       N_lineWaypoints
+       line_waypoints
     ];
 
 
