@@ -4,7 +4,9 @@ function waypoints = getTask4DrawingWaypoints(...
 %GETTASK3VIDEOWAYPOINTS Returns the waypoints for executing the task 3
 %video specific drawing. The waypoints don't include the start pose.
     
-    drawingHeight = 0.078;
+    drawingHeight = 0.0845;
+    % For some reason we need to draw lower towards the end
+    secondDrawingHeight = 0.08325;
 
     % Pick up pen
     penAbovePickUp.x = 0.075;
@@ -185,13 +187,13 @@ function waypoints = getTask4DrawingWaypoints(...
     % Drawing Letter O
     aboveCircleStart.x = 0.095;
     aboveCircleStart.y = 0.175;
-    aboveCircleStart.z = drawingHeight + 0.02;
+    aboveCircleStart.z = secondDrawingHeight + 0.02;
     aboveCircleStart.theta = 0.0;
     aboveCircleStart.gripper = gripperPenCubeHoldPos;
     aboveCircleStart.groupToPrevious = false;
     aboveCircleStart.timeForTrajectory = 0.5;
     aboveCircleStart.name = "Above circle start";
-    circle = drawArc([0.095, 0.175, drawingHeight], [0.08, 0.175, drawingHeight], 2*pi+0.2, 0.1, false);
+    circle = drawArc([0.095, 0.175, secondDrawingHeight], [0.08, 0.175, secondDrawingHeight], 2*pi+0.2, 0.1, false);
     circleWaypoints = generateWaypointsByList(circle, 0.0, 0.0);
     for i = 1 : length(circleWaypoints)
         circleWaypoints(i).theta = 0.0;
@@ -203,7 +205,7 @@ function waypoints = getTask4DrawingWaypoints(...
     end
     aboveCircleEnd.x = 0.095;
     aboveCircleEnd.y = 0.175;
-    aboveCircleEnd.z = drawingHeight + 0.02;
+    aboveCircleEnd.z = secondDrawingHeight + 0.02;
     aboveCircleEnd.theta = 0.0;
     aboveCircleEnd.gripper = gripperPenCubeHoldPos;
     aboveCircleEnd.groupToPrevious = false;
@@ -215,49 +217,49 @@ function waypoints = getTask4DrawingWaypoints(...
    % Drawing Letter Y
     Y_line1Above.x = 0.055;
     Y_line1Above.y = 0.155;
-    Y_line1Above.z = drawingHeight + 0.02;
+    Y_line1Above.z = secondDrawingHeight + 0.02;
     Y_line1Above.timeForTrajectory = 0.5;
     Y_line1Above.name = "Above E start";
 
     Y_line1Start.x = 0.055;
     Y_line1Start.y = 0.155;
-    Y_line1Start.z = drawingHeight;
+    Y_line1Start.z = secondDrawingHeight;
     Y_line1Start.timeForTrajectory = 0.2;
     Y_line1Start.name = "Y start";
     Y_line1End.x = 0.045;
     Y_line1End.y = 0.175;
-    Y_line1End.z = drawingHeight;
+    Y_line1End.z = secondDrawingHeight;
     Y_line1End.timeForTrajectory = 0.5;
     Y_line1End.name = "left Diagnoal line end";
     Y_line2End.x = 0.045;
     Y_line2End.y = 0.195;
-    Y_line2End.z = drawingHeight;
+    Y_line2End.z = secondDrawingHeight;
     Y_line2End.timeForTrajectory = 0.5;
     Y_line2End.name = "vertical line end";
     Y_line2AboveEnd.x = 0.045;
     Y_line2AboveEnd.y = 0.195;
-    Y_line2AboveEnd.z = drawingHeight;
+    Y_line2AboveEnd.z = secondDrawingHeight;
     Y_line2AboveEnd.timeForTrajectory = 0.2;
     Y_line2AboveEnd.name = "vertical line end";
     
     Y_line3Above.x = 0.035;
     Y_line3Above.y = 0.155;
-    Y_line3Above.z = drawingHeight + 0.02;
+    Y_line3Above.z = secondDrawingHeight + 0.02;
     Y_line3Above.timeForTrajectory = 0.5;
     Y_line3Above.name = "Above E start";
     Y_line3Start.x = 0.035;
     Y_line3Start.y = 0.155;
-    Y_line3Start.z = drawingHeight;
+    Y_line3Start.z = secondDrawingHeight;
     Y_line3Start.timeForTrajectory = 0.2;
     Y_line3Start.name = "Y start";
     Y_line3End.x = 0.045;
     Y_line3End.y = 0.175;
-    Y_line3End.z = drawingHeight;
+    Y_line3End.z = secondDrawingHeight;
     Y_line3End.timeForTrajectory = 0.5;
     Y_line3End.name = "Vertical line end";
     Y_line3AboveEnd.x = 0.045;
     Y_line3AboveEnd.y = 0.175;
-    Y_line3AboveEnd.z = drawingHeight + 0.02;
+    Y_line3AboveEnd.z = secondDrawingHeight + 0.02;
     Y_line3AboveEnd.timeForTrajectory = 0.2;
     Y_line3AboveEnd.name = "Horizontal line end above";
     
@@ -265,46 +267,45 @@ function waypoints = getTask4DrawingWaypoints(...
                         Y_line3Above, Y_line3Start, Y_line3End, Y_line3AboveEnd];
   
     % Drawing exclaimation mark
-     
     EM_line1Above.x = 0.025;
     EM_line1Above.y = 0.155;
-    EM_line1Above.z = drawingHeight + 0.02;
+    EM_line1Above.z = secondDrawingHeight + 0.02;
     EM_line1Above.timeForTrajectory = 0.5;
     EM_line1Above.name = "Above EM start";
     
     EM_line1Start.x = 0.025;
     EM_line1Start.y = 0.155;
-    EM_line1Start.z = drawingHeight;
+    EM_line1Start.z = secondDrawingHeight;
     EM_line1Start.timeForTrajectory = 0.2;
     EM_line1Start.name = "EM line1 start";
     
     EM_line1End.x = 0.025;
     EM_line1End.y = 0.185;
-    EM_line1End.z = drawingHeight;
+    EM_line1End.z = secondDrawingHeight;
     EM_line1End.timeForTrajectory = 0.5;
     EM_line1End.name = "EM line1 end";
     
     EM_line1AboveEnd.x = 0.025;
     EM_line1AboveEnd.y = 0.185;
-    EM_line1AboveEnd.z = drawingHeight + 0.02;
+    EM_line1AboveEnd.z = secondDrawingHeight + 0.02;
     EM_line1AboveEnd.timeForTrajectory = 0.5;
     EM_line1AboveEnd.name = "EM line1 end";  
     
     EM_dotAbove.x = 0.025;
     EM_dotAbove.y = 0.195;
-    EM_dotAbove.z = drawingHeight + 0.02;
+    EM_dotAbove.z = secondDrawingHeight + 0.02;
     EM_dotAbove.timeForTrajectory = 0.5;
     EM_dotAbove.name = "Above dot start";
     
     EM_dot.x = 0.025;
     EM_dot.y = 0.195;
-    EM_dot.z = drawingHeight;
+    EM_dot.z = secondDrawingHeight;
     EM_dot.timeForTrajectory = 0.2;
     EM_dot.name = " Dot start";
     
     EM_dotAboveEnd.x = 0.025;
     EM_dotAboveEnd.y = 0.195;
-    EM_dotAboveEnd.z = drawingHeight + 0.02;
+    EM_dotAboveEnd.z = secondDrawingHeight + 0.02;
     EM_dotAboveEnd.timeForTrajectory = 0.2;
     EM_dotAboveEnd.name = "Above dot end";  
     

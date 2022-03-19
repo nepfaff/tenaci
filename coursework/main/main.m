@@ -43,8 +43,8 @@ DXL_ID2                      = 12;  % TODO: Add correct IDs
 DXL_ID3                      = 13;
 DXL_ID4                      = 14;
 DXL_ID5                      = 15;
-BAUDRATE                    = 115200;%1000000;
-DEVICENAME                  = 'COM6';       % Check which port is being used on your controller
+BAUDRATE                    = 1000000;% 115200;
+DEVICENAME                  = 'COM4';       % Check which port is being used on your controller
                                             % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
 % Link lengths in cm
 LINK_LENGTH_1 = 8;
@@ -207,7 +207,7 @@ startPose.name = "Start pose";
 %     startLocations,...
 %     GRIPPER_Z_PICK_UP_CUBE_FACING_DOWN, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_DOWN,...
 %     GRIPPER_Z_PICK_UP_CUBE_FACING_STRAIGHT, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_STRAIGHT,...
-%     GRIPPER_PICK_DOWN_OFFSET,...
+%     GRIPPER_PICK_DOWN_OFFSE,...
 %     GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
 % );
 
@@ -256,9 +256,14 @@ stages = taskSpaceStagesFromWaypoints(...
 % joint3_offset = 0.0;
 % joint4_offset = 0.0;
 % Robot 03
+% joint1_offset = 0.0;
+% joint2_offset = -0.01;
+% joint3_offset = -0.02;
+% joint4_offset = 0.0;
+% Robot 02
 joint1_offset = 0.0;
-joint2_offset = -0.01;
-joint3_offset = -0.02;
+joint2_offset = -0.015;
+joint3_offset = -0.06;
 joint4_offset = 0.0;
 
 % Move to start pose
@@ -302,8 +307,8 @@ pause;
 % In time-based mode, velocity represents the total time in milliseconds
 % for the trajectory and acceleration represents the acceleration time in milliseconds
 % Vel should be (samplePeriod * 1000 * 2) by default and (samplePeriod * 1000
-% * 4 for drawing)
-vel = samplePeriod * 1000 * 5; % Range [0,32767] where units are in milliseconds for time-based profile
+% * 4 for drawing) - samplePeriod * 1000 * 5 for task 4
+vel = samplePeriod * 1000 * 4; % Range [0,32767] where units are in milliseconds for time-based profile
 writeVelocity(DXL_ID1, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
 writeVelocity(DXL_ID2, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
 writeVelocity(DXL_ID3, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
