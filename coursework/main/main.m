@@ -307,7 +307,7 @@ pause;
 % In time-based mode, velocity represents the total time in milliseconds
 % for the trajectory and acceleration represents the acceleration time in milliseconds
 % Vel should be (samplePeriod * 1000 * 2) by default and (samplePeriod * 1000
-% * 4 for drawing) - samplePeriod * 1000 * 5 for task 4
+% * 4 for drawing)
 vel = samplePeriod * 1000 * 4; % Range [0,32767] where units are in milliseconds for time-based profile
 writeVelocity(DXL_ID1, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
 writeVelocity(DXL_ID2, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
