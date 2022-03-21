@@ -5,6 +5,15 @@ function sols = OpenManipIK(Xtool, Ytool, Ztool, ThetaTool)
 % - joint2_angle
 % - joint3_angle
 % - joint4_angle
+    
+    % Values of -0.0 cause issues
+    margin = 1e-3;
+    if Xtool > -margin && Xtool < margin
+        Xtool = 0.0;
+    end
+    if Ytool > -margin && Ytool < margin
+       Ytool = 0.0;
+    end
 
     % System constants
     d1 = 0.077;
