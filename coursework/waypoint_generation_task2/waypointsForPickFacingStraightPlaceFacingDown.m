@@ -104,6 +104,9 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     waypoint.groupToPrevious = false;
     waypoint.timeForTrajectory = 0.25;
     waypoint.name = "place down facing down";
+    [xOffset, yOffset] = computeXYOffset(0.007, waypoint);
+    waypoint.x = waypoint.x + xOffset;
+    waypoint.y = waypoint.y + yOffset;
     waypoints = [waypoints, waypoint];
     
     % Move gripper up
