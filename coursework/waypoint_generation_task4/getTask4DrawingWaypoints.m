@@ -4,9 +4,9 @@ function waypoints = getTask4DrawingWaypoints(...
 %GETTASK3VIDEOWAYPOINTS Returns the waypoints for executing the task 3
 %video specific drawing. The waypoints don't include the start pose.
     
-    drawingHeight = 0.0845;
+    drawingHeight = 0.078;
     % For some reason we need to draw lower towards the end
-    secondDrawingHeight = 0.08325;
+    secondDrawingHeight = 0.0745;
 
     % Pick up pen
     penAbovePickUp.x = 0.075;
@@ -146,23 +146,23 @@ function waypoints = getTask4DrawingWaypoints(...
     % Drawing Letter J
     J_line1Above.x = 0.11;
     J_line1Above.y = 0.155;
-    J_line1Above.z = drawingHeight + 0.02;
+    J_line1Above.z = secondDrawingHeight + 0.02;
     J_line1Above.timeForTrajectory = 0.5;
     J_line1Above.name = "Above J start";
     
     J_line1Start.x = 0.11;
     J_line1Start.y = 0.155;
-    J_line1Start.z = drawingHeight;
+    J_line1Start.z = secondDrawingHeight;
     J_line1Start.timeForTrajectory = 0.2;
     J_line1Start.name = "J line start";
     
     J_line1End.x = 0.11;
     J_line1End.y = 0.185;
-    J_line1End.z = drawingHeight;
+    J_line1End.z = secondDrawingHeight;
     J_line1End.timeForTrajectory = 0.5;
     J_line1End.name = "J line end";
     
-    J_arc = drawArc([0.11, 0.185, drawingHeight], [0.12, 0.185, drawingHeight], pi, 0.1, false);
+    J_arc = drawArc([0.11, 0.185, secondDrawingHeight], [0.12, 0.185, secondDrawingHeight], pi, 0.1, false);
     arcWaypoints = generateWaypointsByList(J_arc, 0.0, 0.0);
     for i = 1 : length(arcWaypoints)
         arcWaypoints(i).theta = 0.0;
@@ -174,7 +174,7 @@ function waypoints = getTask4DrawingWaypoints(...
     end
     aboveJ_ArcEnd.x = 0.11;
     aboveJ_ArcEnd.y = 0.185;
-    aboveJ_ArcEnd.z = drawingHeight + 0.02;
+    aboveJ_ArcEnd.z = secondDrawingHeight + 0.02;
     aboveJ_ArcEnd.theta = 0.0;
     aboveJ_ArcEnd.gripper = gripperPenCubeHoldPos;
     aboveJ_ArcEnd.groupToPrevious = false;
