@@ -4,7 +4,7 @@ function waypoints = getTask3VideoWaypoints(...
 %GETTASK3VIDEOWAYPOINTS Returns the waypoints for executing the task 3
 %video specific drawing. The waypoints don't include the start pose.
     
-    drawingHeight = 0.0845;
+    drawingHeight = 0.078;
 
     % Pick up pen
     penAbovePickUp.x = 0.075;
