@@ -31,6 +31,9 @@ ADDR_PRO_DRIVE_MODE           = 10;
 ADDR_PRO_PROFILE_ACCELERATION = 108;
 ADDR_PRO_PROFILE_VELOCITY     = 112;
 ADDR_PRO_MOVING               = 122;
+ADDR_P_GAIN                   = 84;
+ADDR_I_GAIN                   = 82;
+ADDR_D_GAIN                   = 80;
 
 %% ---- Other Settings ---- %%
 
@@ -113,23 +116,6 @@ else
     return;
 end
 
-% -----SET MOTION LIMITS -----------%
-% TODO: Add updated limits for all servos (should correspond to motion
-% limits defined elsewhere)
-ADDR_MAX_POS = 48;
-ADDR_MIN_POS = 52;
-MAX_POS = 3400;
-MIN_POS = 600;
-
-% Set max position limit
-write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_MAX_POS, MAX_POS);
-write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_MAX_POS, MAX_POS);
-
-% Set min position limit
-write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_MIN_POS, MIN_POS);
-write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_MIN_POS, MIN_POS);
-% ----------------------------------%
-
 % Put actuator into Position Control Mode
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_PRO_OPERATING_MODE, POSITION_MODE);
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_OPERATING_MODE, POSITION_MODE);
@@ -143,6 +129,28 @@ write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_PRO_DRIVE_MODE, TIME_BA
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID3, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID5, ADDR_PRO_DRIVE_MODE, TIME_BASED_MODE);
+
+% Set PID gains
+% pGain = 600;
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_P_GAIN, pGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_P_GAIN, pGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID3, ADDR_P_GAIN, pGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_P_GAIN, pGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID5, ADDR_P_GAIN, pGain);
+% 
+% iGain = 200;
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_I_GAIN, iGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_I_GAIN, iGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID3, ADDR_I_GAIN, iGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_I_GAIN, iGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID5, ADDR_I_GAIN, iGain);
+% 
+% dGain = 0;
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID1, ADDR_D_GAIN, dGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID2, ADDR_D_GAIN, dGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID3, ADDR_D_GAIN, dGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID4, ADDR_D_GAIN, dGain);
+% write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID5, ADDR_D_GAIN, dGain);
 
 % Disable Dynamixel Torque (Should either enable or disable torque)
 disableDynamixelTorque(DXL_ID1, port_num, PROTOCOL_VERSION, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, COMM_SUCCESS)
