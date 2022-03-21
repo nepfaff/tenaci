@@ -4,7 +4,7 @@ function violateJointLimits = DoJointAnglesViolateJointLimits(joint1_angle, join
     
     violateJointLimits = false;
     
-    if joint1_angle > pi || joint1_angle < -pi
+    if joint1_angle > pi+0.05 || joint1_angle < -pi-0.05
         violateJointLimits = true;
     end
 
