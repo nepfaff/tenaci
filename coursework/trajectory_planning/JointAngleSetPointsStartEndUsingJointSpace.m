@@ -10,13 +10,13 @@ function [jointAngles, times] = JointAngleSetPointsStartEndUsingJointSpace(...
     if err
        fprintf("Start target = X: %f, Y: %f, Z: %f, Th: %f\n",...
             startX, startY, startZ, startTheta);
-       error("JointAngleSetPointsStartEndUsingJointSpace: No valid IK solution found\n");
+       error("JointAngleSetPointsStartEndUsingJointSpace: No valid start IK solution found\n");
     end
     [endIKSol, err] = getFirstValidIKSol(endIKSols);
     if err
        fprintf("End target = X: %f, Y: %f, Z: %f, Th: %f\n",...
             endX, endY, endZ, endTheta);
-       error("JointAngleSetPointsStartEndUsingJointSpace: No valid IK solution found\n");
+       error("JointAngleSetPointsStartEndUsingJointSpace: No valid end IK solution found\n");
     end
        
     % Get theta set points forming trajectories between start and end

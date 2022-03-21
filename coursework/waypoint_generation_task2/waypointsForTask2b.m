@@ -23,6 +23,8 @@ function waypoints = waypointsForTask2b(...
 %tightly encloses a cube.
     
     waypoints = [];
+    
+    decreaseWhenPlacingDown = 0.000;
     for i = 1 : length(cubeLocations)
         loc = cubeLocations(i);
         

@@ -46,8 +46,8 @@ DXL_ID2                      = 12;  % TODO: Add correct IDs
 DXL_ID3                      = 13;
 DXL_ID4                      = 14;
 DXL_ID5                      = 15;
-BAUDRATE                    = 1000000;% 115200;
-DEVICENAME                  = 'COM4';       % Check which port is being used on your controller
+BAUDRATE                    = 115200;
+DEVICENAME                  = 'COM9';       % Check which port is being used on your controller
                                             % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0' Mac: '/dev/tty.usbserial-*'
 % Link lengths in cm
 LINK_LENGTH_1 = 8;
@@ -65,7 +65,7 @@ DXL_MOVING_STATUS_THRESHOLD = 20;           % Dynamixel moving status threshold
 % Values to send to the gripper
 GRIPPER_OPEN_POS = 1700;
 GRIPPER_CLOSED_POS = 2647;
-GRIPPER_CUBE_HOLD_POS = 2450;
+GRIPPER_CUBE_HOLD_POS = 2600;
 GRIPPER_PEN_CUBE_HOLD_POS = 2350;%2250;
 
 % get Z locations from the config folder
@@ -211,13 +211,13 @@ startPose.name = "Start pose";
 %     GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
 % );
 
-% waypoints = waypointsForTask2b(...
-%     startLocations,...
-%     GRIPPER_Z_PICK_UP_CUBE_FACING_DOWN, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_DOWN,...
-%     GRIPPER_Z_PICK_UP_CUBE_FACING_STRAIGHT, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_STRAIGHT,...
-%     GRIPPER_PICK_DOWN_OFFSET,...
-%     GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
-% );
+waypoints = waypointsForTask2b(...
+    startLocations,...
+    GRIPPER_Z_PICK_UP_CUBE_FACING_DOWN, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_DOWN,...
+    GRIPPER_Z_PICK_UP_CUBE_FACING_STRAIGHT, GRIPPER_Z_ABOVE_CUBE_PICK_UP_FACING_STRAIGHT,...
+    GRIPPER_PICK_DOWN_OFFSET,...
+    GRIPPER_OPEN_POS, GRIPPER_CUBE_HOLD_POS...
+);
 
 % waypoints = waypointsForTask2c(...
 %     startLocations, endLocations,...
@@ -231,9 +231,9 @@ startPose.name = "Start pose";
 %     GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
 % );
 
-waypoints = getTask4Waypoints(...
-    GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
-);
+% waypoints = getTask4Waypoints(...
+%     GRIPPER_OPEN_POS, GRIPPER_PEN_CUBE_HOLD_POS...
+% );
 
 
 % Waypoints must include the gripper's starting pose
@@ -246,7 +246,6 @@ temp = num2cell([waypoints.timeForTrajectory] + additionalTimePerTrajectory);
 [waypoints.timeForTrajectory] = temp{:};
 
 % Convert waypoints into stages (sequences of set points) using trajectory planning
-% samplePeriod should be 0.1 by default and 0.05 for drawing tasks
 samplePeriod = 0.05; % In seconds
 stages = taskSpaceStagesFromWaypoints(...
     waypoints, samplePeriod...
@@ -259,20 +258,20 @@ stages = taskSpaceStagesFromWaypoints(...
 % joint3_offset = -0.05;
 % joint4_offset = -0.03;
 % Robot 07
-% joint1_offset = 0.0;
-% joint2_offset = 0.02;
-% joint3_offset = 0.0;
-% joint4_offset = 0.0;
+joint1_offset = 0.0;
+joint2_offset = 0.01;
+joint3_offset = -0.03;
+joint4_offset = 0.0;
 % Robot 03
 % joint1_offset = 0.0;
 % joint2_offset = -0.01;
 % joint3_offset = -0.02;
 % joint4_offset = 0.0;
 % Robot 02
-joint1_offset = 0.0;
-joint2_offset = -0.015;
-joint3_offset = -0.06;
-joint4_offset = 0.0;
+% joint1_offset = 0.0;
+% joint2_offset = -0.015;
+% joint3_offset = -0.06;
+% joint4_offset = 0.0;
 
 % Move to start pose
 fprintf("Moving to start pose\n");
@@ -314,17 +313,15 @@ pause;
 % Set velocity and acceleration
 % In time-based mode, velocity represents the total time in milliseconds
 % for the trajectory and acceleration represents the acceleration time in milliseconds
-% Vel should be (samplePeriod * 1000 * 2) by default and (samplePeriod * 1000
-% * 4 for drawing)
 vel = samplePeriod * 1000 * 4; % Range [0,32767] where units are in milliseconds for time-based profile
 writeVelocity(DXL_ID1, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
 writeVelocity(DXL_ID2, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
 writeVelocity(DXL_ID3, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
 writeVelocity(DXL_ID4, vel, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_VELOCITY);
 
-% acc should be (samplePeriod * 250) by default and (samplePeriod * 250 *
+% acc should be (samplePeriod * 250 * 4) by default and (samplePeriod * 250 *
 % 2) for drawing
-acc = samplePeriod * 250 * 2; % Range [0,32767] where units are in milliseconds for time-based profile
+acc = samplePeriod * 250 * 4; % Range [0,32767] where units are in milliseconds for time-based profile
 writeAcceleration(DXL_ID1, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
 writeAcceleration(DXL_ID2, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);
 writeAcceleration(DXL_ID3, acc, port_num, PROTOCOL_VERSION, COMM_SUCCESS, ADDR_PRO_PROFILE_ACCELERATION);

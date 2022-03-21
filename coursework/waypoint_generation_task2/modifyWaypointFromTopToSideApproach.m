@@ -12,4 +12,9 @@ function newWaypoint = modifyWaypointFromTopToSideApproach(waypoint, gripperZCub
     newWaypoint.y = waypoint.y - yOffset;
     % Offset to avoid crashing into cube stand (stand has higher sides)
     newWaypoint.z = gripperZCube + 0.04;
+    
+    if (waypoint.theta == 0.0)
+        % Causes fewer joint limit issues
+        newWaypoint.theta = -0.15;
+    end
 end
