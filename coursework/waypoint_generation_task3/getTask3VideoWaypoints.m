@@ -38,34 +38,34 @@ function waypoints = getTask3VideoWaypoints(...
 
     
     % Lines
-    line1Above.x = -0.06;
-    line1Above.y = 0.2;
+    line1Above.x = -0.175;
+    line1Above.y = 0.1;
     line1Above.z = drawingHeight + 0.02;
     line1Above.theta = 0.0;
     line1Above.gripper = gripperPenCubeHoldPos;
     line1Above.groupToPrevious = false;
     line1Above.timeForTrajectory = 0.4;
-    line1Above.name = "Above line 1 start";
+    line1Above.name = "Above vertical line start";
 
-    line1Start.x = -0.06;
-    line1Start.y = 0.2;
+    line1Start.x = -0.175;
+    line1Start.y = 0.1;
     line1Start.z = drawingHeight;
     line1Start.timeForTrajectory = 0.1;
-    line1Start.name = "Diagonal line start";
-    line1End.x = -0.14;
-    line1End.y = 0.125;
+    line1Start.name = "Vertical line start";
+    line1End.x = -0.175;
+    line1End.y = 0.2;
     line1End.z = drawingHeight;
-    line1End.timeForTrajectory = 0.55;
+    line1End.timeForTrajectory = 0.6;
     line1End.name = "Diagonal line end";
-    line2End.x = -0.14;
-    line2End.y = 0.2;
+    line2End.x = -0.125;
+    line2End.y = 0.15;
     line2End.z = drawingHeight;
-    line2End.timeForTrajectory = 0.4;
+    line2End.timeForTrajectory = 0.3;
     line2End.name = "Vertical line end";
-    line3End.x = -0.06;
-    line3End.y = 0.2;
+    line3End.x = -0.175;
+    line3End.y = 0.15;
     line3End.z = drawingHeight;
-    line3End.timeForTrajectory = 0.5;
+    line3End.timeForTrajectory = 0.3;
     line3End.name = "Horizontal line end";
     lineWaypoints = [line1Start, line1End, line2End, line3End];
     % Constant for lines
@@ -80,7 +80,7 @@ function waypoints = getTask3VideoWaypoints(...
 
     
     % Draw arc
-    arc = drawArc([-0.06, 0.2, drawingHeight], [-0.10, 0.2, drawingHeight], pi, 0.1, false);
+    arc = drawArc([-0.175, 0.15, drawingHeight], [-0.175, 0.175, drawingHeight], 3*pi/2, 0.1, true);
     arcWaypoints = generateWaypointsByList(arc, 0.0, 0.0);
     for i = 1 : length(arcWaypoints)
         arcWaypoints(i).theta = 0.0;
@@ -91,8 +91,8 @@ function waypoints = getTask3VideoWaypoints(...
         arcWaypoints(i).name = "arc";
     end
 
-    aboveArcEnd.x = -0.14;
-    aboveArcEnd.y = 0.2;
+    aboveArcEnd.x = -0.2;
+    aboveArcEnd.y = 0.175;
     aboveArcEnd.z = drawingHeight + 0.05;
     aboveArcEnd.theta = 0.0;
     aboveArcEnd.gripper = gripperPenCubeHoldPos;
