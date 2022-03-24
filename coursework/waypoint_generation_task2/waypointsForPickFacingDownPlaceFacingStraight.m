@@ -41,6 +41,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.groupToPrevious = false;
     waypoint.timeForTrajectory = 0.6;
     waypoint.name = "above start";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPickUpCubeFacingDown);
@@ -55,6 +56,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.gripper = gripperCubeHoldPos;
     waypoint.groupToPrevious = false;
     waypoint.timeForTrajectory = 0.12;
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     waypoint.name = "grab cube facing down";
     waypoints = [waypoints, waypoint];
     
@@ -67,6 +69,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.groupToPrevious = false; % TODO: try true
     waypoint.timeForTrajectory = 0.12;
     waypoint.name = "above start";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPickUpCubeFacingDown);
@@ -82,6 +85,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.groupToPrevious = true;
     waypoint.timeForTrajectory = 0.62;
     waypoint.name = "above end - rotated";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingTheta(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPlaceDownCubeFacingStraight);
@@ -116,6 +120,7 @@ function waypoints = waypointsForPickFacingDownPlaceFacingStraight(...
     waypoint.groupToPrevious = false;
     waypoint.timeForTrajectory = 0.12;
     waypoint.name = "above end";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingTheta(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPlaceDownCubeFacingStraight);

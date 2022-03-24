@@ -41,6 +41,7 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     waypoint.groupToPrevious = false;
     waypoint.timeForTrajectory = 0.8;
     waypoint.name = "above start";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingTheta(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPickUpCubeFacingStraight);
@@ -56,6 +57,7 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     waypoint.groupToPrevious = false;
     waypoint.timeForTrajectory = 0.2;
     waypoint.name = "grab cube facing straight";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingTheta(waypoint);
     waypoints = [waypoints, waypoint];
     
     % Pick up cube
@@ -70,6 +72,7 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     [xOffset, yOffset] = computeXYOffset(gripperPickDownOffset, waypoint);
     waypoint.x = waypoint.x - xOffset;
     waypoint.y = waypoint.y - yOffset;
+    waypoint = modifyWaypointToAvoidJointLimitsUsingTheta(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPickUpCubeFacingStraight);
@@ -85,6 +88,7 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     waypoint.groupToPrevious = false; % TODO: try true
     waypoint.timeForTrajectory = 0.62;
     waypoint.name = "above end - rotated";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPlaceDownCubeFacingDown);
@@ -107,6 +111,7 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     [xOffset, yOffset] = computeXYOffset(0.007, waypoint);
     waypoint.x = waypoint.x + xOffset;
     waypoint.y = waypoint.y + yOffset;
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     waypoints = [waypoints, waypoint];
     
     % Move gripper up
@@ -118,6 +123,7 @@ function waypoints = waypointsForPickFacingStraightPlaceFacingDown(...
     waypoint.groupToPrevious = false;
     waypoint.timeForTrajectory = 0.12;
     waypoint.name = "above end";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPlaceDownCubeFacingDown);

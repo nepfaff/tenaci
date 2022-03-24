@@ -34,6 +34,7 @@ function waypoints = waypointsForMovingBetweenStartFinishFacingDown(...
     waypoint.groupToPrevious = false;
     waypoint.timeForTrajectory = 0.3;
     waypoint.name = "above start";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPickUpCubeFacingDown);
@@ -49,6 +50,7 @@ function waypoints = waypointsForMovingBetweenStartFinishFacingDown(...
     waypoint.groupToPrevious = false; % TODO: Try true
     waypoint.timeForTrajectory = 0.12;
     waypoint.name = "grab cube facing down";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     waypoints = [waypoints, waypoint];
     
     % Pick up cube
@@ -60,6 +62,7 @@ function waypoints = waypointsForMovingBetweenStartFinishFacingDown(...
     waypoint.groupToPrevious = false;
     waypoint.timeForTrajectory = 0.12;
     waypoint.name = "above start";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPickUpCubeFacingDown);
@@ -75,6 +78,7 @@ function waypoints = waypointsForMovingBetweenStartFinishFacingDown(...
     waypoint.groupToPrevious = false; % TODO: Try true
     waypoint.timeForTrajectory = 0.2;
     waypoint.name = "above end";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPlaceDownCubeFacingDown);
@@ -89,6 +93,7 @@ function waypoints = waypointsForMovingBetweenStartFinishFacingDown(...
     waypoint.gripper = gripperOpenPos;
     waypoint.timeForTrajectory = 0.12;
     waypoint.name = "place down facing down";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     waypoint.groupToPrevious = false; % TODO: Try true
     waypoints = [waypoints, waypoint];
     
@@ -101,6 +106,7 @@ function waypoints = waypointsForMovingBetweenStartFinishFacingDown(...
     waypoint.groupToPrevious = false;
     waypoint.timeForTrajectory = 0.12;
     waypoint.name = "above end";
+    waypoint = modifyWaypointToAvoidJointLimitsUsingThetaUp(waypoint);
     if ~doValidIKExist([waypoint])
         waypoint = modifyWaypointFromTopToSideApproach(waypoint,...
             gripperZPlaceDownCubeFacingDown);
