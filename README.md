@@ -18,8 +18,8 @@ This is an excellent debugging tool and makes testing small changes easy.
 
 ## Documentation
 
-Please see the `docs` directory for both the coursework (video + demo day) specifications and the report (to be added).
-A video of the robot's performance is TBC.
+Please see the `docs` directory for both the coursework (video + demo day) specifications and the report.
+The project video can be found [here](https://youtu.be/l0eRi8rOHs8).
 
 The `main/main.m` script is the entry point. Different tasks can be run by selecting different waypoints.
 This can be achieved by commenting out the current waypoint function and using one of the other commented out waypoint functions.
