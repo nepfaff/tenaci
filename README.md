@@ -1,6 +1,8 @@
 # tenaci
 Imperial College London - Robotic Manipulation - Coursework
 
+![tenaci](https://user-images.githubusercontent.com/53228351/178118172-5fbef449-fed4-4611-a62b-7f9261ba9bdd.jpg)
+
 ## Hardware
 
 The system is based on the [OpenMANIPULATOR-X](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/overview/) robot.
